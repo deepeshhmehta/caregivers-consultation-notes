@@ -1,0 +1,40 @@
+<ion-view class="tinder-cards-view">
+    <button class="button button-clear button-positive">Edit</button>
+    <ion-nav-title>
+        <span>Personal Problems</span>
+    </ion-nav-title>
+    
+    <ion-content scroll="true" class="bgwhite">
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()">
+        </ion-refresher>
+        
+         <div class="mt40 p15">
+           <p>swipe away to delete an existing problem</p>
+        </div>
+        <td-cards>
+          	<td-card ng-repeat="card in cards" id="td-card"
+                     on-transition-out="swipedAway(card.id)">
+                <h4 class="cardtitle">
+                    {{card.problem.problem}} Year: {{card.year}}
+                </h4>
+                
+          	</td-card>
+        </td-cards>
+        <label class="item item-list listreq">
+            <select ng-model = "newproblem.selectedproblem" class ="cselect" id="problemselect">
+              <option ng-repeat="option in select" value={{option.id}}>{{option.problem}}</option>
+            </select>
+        </label>
+        <label class="item item-list listreq" ng-if="newproblem.selectedproblem = 0">
+            <input ng-model="newproblem.problem" type = "text" placeholder="Problem Name" class="hide" id="newproblem" />
+        </label>
+        <label class="item item-list listreq">
+            <input ng-model="newproblem.year" type = "text" placeholder="Year" />
+        </label>
+        <button ng-click="addProblem()" class="button button-positive button-block">Add History</button>
+        
+  	
+    </ion-content>
+</ion-view>

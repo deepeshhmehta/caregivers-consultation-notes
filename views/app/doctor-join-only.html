@@ -1,0 +1,38 @@
+<ion-view class="rjoin-view" >
+    <ion-nav-title>
+        <span> {{user.fname}} {{user.lname}}</span>
+    </ion-nav-title>
+    <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear" ng-click="exitVideo()"> Exit</button>
+    </ion-nav-buttons>
+    <div class="bar bar-subheader cbar" >
+        <div class="row">
+            <div class="col txt-left"><h5> {{appDetails[0].appointments.scheduled_start_time|time1}}</h5></div>
+            <div class="col txt-right"><h5> {{result}}</h5></div>
+            <!--  <div class="addnebtn btn-share ion-medkit" ng-click="inventory();"></div> -->
+            <!--<div class="addnebtn btn-add ion-plus" ng-click="addnote();"></div>-->
+        </div>
+    </div>
+    <ion-content>
+        <div class="mediascreen mdhight">
+            <!--<iframe class="videochat" ng-src="{{trustSrc(oToken)}}" ></iframe>-->
+            <div id='myPublisherDiv' style="position:absolute;right: 10px;bottom:10px"></div> 
+            <div id='subscribersDiv' class="subscribediv">Waiting for patient to join!</div> 
+        </div>
+
+    </ion-content>
+    <div class="sticyfooter joinfooter">
+        <div class="tabs tabs-icon-top">
+            <div class="tab-item muteMic"  onclick="classtoggle(this)">
+                <i class="icon ion-ios-mic"></i>
+                <i class="icon ion-ios-mic-off"></i>
+                Mic
+            </div>
+            <div class="tab-item muteVideo"   onclick="classtoggle(this)">
+                <i class="icon ion-ios-videocam"></i>
+                Video
+            </div>
+
+        </div>
+    </div>
+</ion-view>

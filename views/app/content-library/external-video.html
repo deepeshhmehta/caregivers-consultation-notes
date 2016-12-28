@@ -1,0 +1,76 @@
+<ion-view class="category-feeds-view">
+    <ion-nav-title>
+        <span> External Video  </span>
+    </ion-nav-title>
+    <div class="row tabnav headtab">
+        <div class="col"><span class="nbtn active"  rel="tabone"  >1. Describe</span></div>
+        <div class="col"><span class="nbtn" rel="tabtwo"  >2. Confirm</span></div>
+    </div>
+    <form name="externalVideo" id="externalVideo" enctype="multipart/form-data" novalidate >
+        <input type="hidden" name="docid" value="{{doctorId}}"  ng-model="doctorId"/>
+        <ion-content> 
+            <div class="tabcon2 notetab mt60" id="tabone" >
+                <div class="item item-divider mt15">Title</div>
+                <label class="item item-input">
+                    <input type="text" name="title" ng-model="title" placeholder="Title" maxlength="100"  required="" />
+                </label>
+
+                <div class="item item-divider mt15">Description</div>
+
+                <label class="item item-input">
+                    <input type="text" name="desc" ng-model="desc" placeholder="Description" maxlength="200"  required=""/>
+                </label>
+
+                <div class="item item-divider mt15">Embedded URL (paste including <&nbsp;iframe&nbsp;>)</div>
+                <label class="item item-input">
+                    <input type="text" name="urlraw" ng-model="urlraw" placeholder="<iframe height=10px; width=10px; src='www.xyz.com/HUWxin?inmc'></iframe>" ng-change="seturl(urlraw)" required="" value="{{urlraw}}"/>
+                </label>
+                
+                <input type="hidden" name="url" ng-model="url" value="{{url}}"/>
+         
+
+                <div class="item item-divider mt15">Share With </div>
+
+                <select name="sharewith" ng-model="sharewith"  class="cselectn" required="">
+                    <option value="" selected="selected" >Please Select</option>
+                    <option  ng-repeat="tg in target_groups" value="{{tg.id}}"> {{tg.target_group}} </option>
+                </select>
+
+                <div class="list">
+                </div>
+            </div>	
+            <div class="tabcon2 notetab mt60" id="tabtwo" style="display:none;" >
+                <div class="item item-divider mt15">Category {{catchoice}} </div>
+                <ion-list>
+                    <ion-checkbox ng-model="catchoice" ng-click="isChecked()"  ng-repeat="cats in category"  ng-checked="catId.indexOf(cats.id) !== -1"  id="check-box-{{$index}}" name="catchoice[]"  ng-value="{{cats.id}}" value="{{cats.id}}">{{cats.specialization}}</ion-checkbox>
+                </ion-list>
+
+            </div>	
+
+        </ion-content>
+        <div class="footerbar">
+
+            <div class="tab-buttons">
+                <div class="fixedbar row tbtn active" rel="tabone">
+                    <div class="col button btn-share" ng-click="tabclick('tabtwo')" ng-disabled="externalVideo.title.$invalid || externalVideo.desc.$invalid || externalVideo.url.$invalid|| externalVideo.sharewith.$invalid">Next</div>
+                </div>
+               
+                <div  class="fixedbar row tbtn" rel="tabtwo">
+
+                    <button type="button" class="col button btn-add"  ng-disabled="checkboxval"  ng-click="submitNewArticle()">Submit</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</ion-view>
+
+
+
+
+
+
+
+
+
+

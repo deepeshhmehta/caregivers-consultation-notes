@@ -1,0 +1,51 @@
+<ion-view class="tinder-cards-view">
+    <button class="button button-clear button-positive">Edit</button>
+    <ion-nav-title>
+        <span>Diagnosis</span>
+    </ion-nav-title>
+    
+    <ion-content scroll="true" class="bgwhite">
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()">
+        </ion-refresher>
+        
+         <div class="mt40 p15">
+           <p>some sensible message here</p>
+        </div>
+        <td-cards>
+          	<td-card ng-repeat="card in cards" id="td-card"
+                     on-transition-out="swipedAway(card.id)"
+                     ng-click="openNotesDetails(card.id)">
+                <h4 class="cardtitle">
+                    Entry - {{$index + 1}}
+                </h4>
+                <div class="tdincard">
+                    <p>{{card.diagnosis}}</p>
+                </div>
+                
+          	</td-card>
+        </td-cards>
+ 
+        <button ng-click="addDiagnosis()" class="button button-positive button-block">Add New Diagnosis</button>
+    </ion-content>
+</ion-view>
+<script id="create-diagnosis" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar app-top-bar">
+            <h1 class="title">Write a Diagnosis</h1>
+            <div class="button button-clear" ng-click="modal.hide()"><span class="icon ion-close"></span></div>
+        </ion-header-bar>
+        <ion-content>
+            
+                <div class="item item-divider"><span>Diagnosis </span></div> 
+                <label class="item item-input listreq">
+                  <textarea ng-model="data.diagnosis" type = "text" required placeholder="Diagnosis" rows="25" cols="300" style="resize: none;">
+                    
+                  </textarea>
+                </label>
+                <button ng-click="saveDiagnosis()" class="button button-positive button-block">Add</button>
+            
+        </ion-content>
+    </ion-modal-view>
+</script>

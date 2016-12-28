@@ -1,0 +1,21 @@
+<ion-view class="settings-view" cache-view="false">
+  <!-- <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+   
+  </ion-nav-buttons> -->
+  <ion-nav-title>
+    <span>Video Broadcast</span>
+    <button class="button button-icon button-clear" ng-click="exitVideo()" style="float:right;"> Exit</button>
+    <button class="button button-icon button-clear" ng-if="startbroadcast == 1" ng-click="endVideo()" style="float:right;"> End Session</button>
+  </ion-nav-title>
+   	<ion-content>	
+		   <div class="mediascreen h85vh">
+            <!--<iframe class="videochat" ng-src="{{trustSrc(oToken)}}" ></iframe>-->
+            <div id='myPublisherDiv' style="position:absolute;right: 10px;bottom:10px"></div> 
+            
+            <iframe id="iframe_player" src="" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>           
+             
+            <!-- <div id='subscribersDiv' class="subscribediv">Waiting for patient to join!</div>  -->
+    </div>
+   	</ion-content>
+</ion-view>

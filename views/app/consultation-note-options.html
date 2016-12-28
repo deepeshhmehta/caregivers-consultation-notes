@@ -1,0 +1,33 @@
+<ion-view class="category-list-view">
+    
+    <ion-nav-title>
+        <span>Consultation Note Menu</span>
+    </ion-nav-title>
+	 
+    <ion-content>
+
+        <div class="list catlist">
+            <div ng-repeat="option in options">
+                
+                <a class="item item-icon-right accordian greyblock" ng-click="goUrl('{{option.url}}')" ng-if="(option.children.length==0)">
+                    <span class="ctitle">{{option.name|capitalize}}</span>  
+                </a>
+
+                <a class="item item-icon-right accordian greyblock" ng-if="(option.children.length!=0)">
+                    <span class="ctitle">{{option.name|capitalize}}</span>	
+                </a>
+                
+                <div class="panel hide" ng-if="check(option.children)">
+                    <div ng-repeat="child in option.children" >
+                        <a class ="item" ng-click="goUrl('{{child.url}}')">{{child.name|capitalize}}</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ion-content>
+
+	
+</ion-view>
+
+

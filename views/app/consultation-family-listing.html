@@ -1,0 +1,39 @@
+<ion-view class="tinder-cards-view">
+    <button class="button button-clear button-positive">Edit</button>
+    <ion-nav-title>
+       <span  >Family Listing</span>
+    </ion-nav-title>
+	<ion-content scroll="true" class="bgwhite">
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()">
+        </ion-refresher>
+        <td-cards>
+            <td-card ng-repeat="card in cards" id="td-card"
+                     ng-click ="selectedCard(card.id)"  
+                     on-transition-out="swipedAway(card.id)">
+                <h4 class="cardtitle">
+                    {{card.relation.relation_name}}: {{card.relative_name}} ({{card.relative_age}} Years)
+                </h4>
+                
+            </td-card>
+        </td-cards>
+      	<label class="item item-list listreq">
+            <select ng-model = "newrelation.selectedrelation" class ="cselect" id="problemselect">
+              <option ng-repeat="option in select" value={{option.id}}>{{option.relation_name}}</option>
+            </select>
+        </label>
+        <label class="item item-list listreq" ng-if="newrelation.selectedrelation == 0">
+            <input ng-model="newrelation.relationname" type = "text" placeholder=" Relation name (Father/Mother)" id="newrelation" />
+        </label>
+        <label class="item item-list listreq">
+            <input ng-model="newrelation.name" type = "text" placeholder="Name" />
+        </label>
+        <label class="item item-list listreq">
+            <input ng-model="newrelation.age" type = "number" placeholder="Name" />
+        </label>
+        <button ng-click="addRelation()" class="button button-positive button-block">Add Relation</button>
+        
+  	
+    </ion-content>
+</ion-view>

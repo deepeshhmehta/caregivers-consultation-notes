@@ -1,0 +1,36 @@
+<ion-view class="tinder-cards-view">
+    <button class="button button-clear button-positive">Edit</button>
+    <ion-nav-title>
+        <span>Choose/Add a Note</span>
+    </ion-nav-title>
+    
+    <ion-content scroll="true" class="bgwhite">
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()">
+        </ion-refresher>
+        
+         <div class="mt40 p15">
+           <p>some sensible message here</p>
+        </div>
+        <td-cards>
+          	<td-card ng-repeat="card in cards" id="td-card"
+                     on-transition-out="swipedAway(card.id)"
+                     ng-click="openNotesDetails(card.id)">
+                <h4 class="cardtitle">
+                    {{card.title}} - {{card.date}}
+                </h4>
+                
+          	</td-card>
+        </td-cards>
+        <label class="item item-list listreq">
+            <input ng-model="newnote.title" type = "text" placeholder="Title" class="hide" id="newnote" />
+        </label>
+        <label class="item item-input listreq">
+            <input type="date" ng-model ="newnote.date" value={{newnote.date}}  required/>
+        </label>
+        <button ng-click="addNote()" class="button button-positive button-block">Add Note</button>
+        
+  	
+    </ion-content>
+</ion-view>
