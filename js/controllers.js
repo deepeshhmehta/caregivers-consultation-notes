@@ -3357,6 +3357,17 @@ angular.module('your_app_name.controllers', [])
 
             $scope.saveMedication = function(){
                 console.log($scope.data);
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-note-add-medication',
+                        data: $scope.data
+                    }).then(function successCallback(response) {
+                        console.log('response');
+                        console.log(response.data);
+                    }, function errorCallback(response){
+                        console.log('error');
+                        alert(response.data.message);
+                    });
             }
             
             $scope.doRefresh = function(){
