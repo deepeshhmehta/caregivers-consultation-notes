@@ -3350,11 +3350,27 @@ angular.module('your_app_name.controllers', [])
             console.log('noteid: ' + $scope.noteid);
 
             $scope.data =  {};
-            $scope.data['noteid '] =  $scope.noteid;
+            $scope.data['noteid'] =  $scope.noteid;
             $scope.frequencyno = "Hours,Days,Weeks,Months";
             $scope.intakemethod = "Oral,Injection,Ear,Eye,Nose,Inhaled,Rectal,Feeding";
             $scope.problems = [{record_id: 0, value: "Add New"}];
 
+            $scope.setToggle = function(val){
+                console.log(val);
+                if(val){
+                    $scope.data['status-4'] = 1;
+                }else{
+                    $scope.data['status-4'] = 0;
+                }
+            }
+            $scope.setOnceEvery = function(val){
+                console.log(val);
+                $scope.data['no-of-frequency-1'] = val;
+            }
+            $scope.setIntakeMethod = function(val){
+                console.log(val);
+                $scope.data['intake'] = val;
+            }
             $scope.saveMedication = function(){
                 console.log($scope.data);
                 $http({
@@ -3366,7 +3382,8 @@ angular.module('your_app_name.controllers', [])
                         console.log(response.data);
                     }, function errorCallback(response){
                         console.log('error');
-                        alert(response.data.message);
+                        console.log(response.data.message);
+                        alert('some field is missing');
                     });
             }
             

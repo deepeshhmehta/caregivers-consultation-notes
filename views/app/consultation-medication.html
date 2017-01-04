@@ -58,14 +58,14 @@
                   </input>
                 </label>
                 <label class="item item-input listreq">
-                  <select class="cselect Ditemselect" ng-init="selData = (frequencyno).split(',')" name="{{frequencyno}}" ng-modal="data.no-of-frequency-1">
+                  <select class="cselect Ditemselect" ng-init="selData = (frequencyno).split(',')" ng-model="onceeveryselect" ng-change="setOnceEvery(onceeveryselect)">
                     <option ng-repeat="sel in selData" value="{{sel}}"> {{sel}} </option>
                   </select>
                 </label>
 
                 <div class="item item-divider"><span>Intake Method *</span></div> 
                 <label class="item item-input listreq">
-                  <select class="cselect Ditemselect" ng-init="selMethod = (intakemethod).split(',')" name="{{intakemethod}}" ng-modal="data.intake" >
+                  <select class="cselect Ditemselect" ng-init="selMethod = (intakemethod).split(',')" name="{{intakemethod}}" ng-model="intake" ng-change="setIntakeMethod(intake)" >
                     <option ng-repeat="sel in selMethod" value="{{sel}}"> {{sel}} </option>
                   </select>
                 </label>
@@ -84,17 +84,17 @@
 
                 <div class="item item-divider"><span>Start Date *</span></div> 
                 <label class="item item-input listreq">
-                  <input ng-model="data.start-date" type = "date" required placeholder="1 Tablet, 20mL etc." rows="25" cols="300" style="resize: none;">                    
+                  <input ng-model="data['start-date']" type = "date" required rows="25" cols="300" style="resize: none;">                    
                   </input>
                 </label>
                 
                 <div class="item item-divider"><span>Status *</span></div>                 
-                <ion-toggle ng-model="data.status-4" ng-checked="0"  ng-click="check(mediStatus)" ng-change="check(mediStatus)" toggle-class="toggle-positive"> Active </ion-toggle>
+                <ion-toggle ng-model="mediStatus" ng-checked="0"  ng-click="setToggle(mediStatus)" ng-change="setToggle(mediStatus)" toggle-class="toggle-positive"> Active </ion-toggle>
                 <input type="hidden" value="Active" id="mediStatus" name="{{field.name}}" />                
 
                 <div class="item item-divider"><span>Related Problem *</span></div>  
                 <label class="item item-input">
-                    <select class="cselect" ng-model="data.related-problem" ng-change="addOther(field.name, field.field, prob.record_id)" ng-init="- 1">
+                    <select class="cselect" ng-model="data['related-problem']" ng-change="addOther(field.name, field.field, prob.record_id)" ng-init="- 1">
                         <option value="" ng-selected="1">Select </option>
                         <option ng-repeat="prob in problems"  value="{{prob.record_id}}">{{prob.value}}</option>
                     </select>
@@ -102,13 +102,13 @@
 
                 <div class="item item-divider"><span>Prescribed By *</span></div> 
                 <label class="item item-input listreq">
-                  <input ng-model="data.prescribed-by" type = "text" required placeholder="Prescribed by." rows="25" cols="300" style="resize: none;">                    
+                  <input ng-model="data['prescribed-by']" type = "text" required placeholder="Prescribed by." rows="25" cols="300" style="resize: none;">                    
                   </input>
                 </label>
 
                 <div class="item item-divider"><span>Notes *</span></div> 
                 <label class="item item-input listreq">
-                  <input ng-model="data.notes-2" type = "text" required placeholder="Notes." rows="25" cols="300" style="resize: none;">                    
+                  <input ng-model="data['notes-2']" type = "text" required placeholder="Notes." rows="25" cols="300" style="resize: none;">                    
                   </input>
                 </label>
 
