@@ -2926,11 +2926,6 @@ angular.module('your_app_name.controllers', [])
                         $scope.options = response.data;
                         console.log($scope.options);
                     });
-            
-            jQuery(document).on('click','.accordian',function(){
-                console.log('clicked');
-                jQuery(this).next().toggle('slow');
-            });
 
 
             $scope.goUrl = function(val){
@@ -3292,7 +3287,7 @@ angular.module('your_app_name.controllers', [])
             $scope.openNotesDetails = function(val){
                 console.log('goto details page for note id: ' +val);
                 store({'noteId': val});
-                $state.go('app.consultation-note-details');
+                $state.go('app.consultation-note-details',{relaod: true});
             }
 
             $scope.addNote = function(){
@@ -3332,11 +3327,6 @@ angular.module('your_app_name.controllers', [])
                         $scope.options = response.data;
                         console.log($scope.options);
                     });
-            
-            jQuery(document).on('click','.accordian',function(){
-                console.log('clicked');
-                jQuery(this).next().toggle('slow');
-            });
 
 
             $scope.goUrl = function(val){
@@ -3353,6 +3343,53 @@ angular.module('your_app_name.controllers', [])
                     return true;
                 }
             }            
+        })
+
+        .controller('ConsultationsMedicationCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
+            $scope.noteid = get('noteid');
+            console.log('noteid: ' + $scope.noteid);
+
+            $scope.data =  {};
+            $scope.data['noteid '] =  $scope.noteid;
+            $scope.frequencyno = "Hours,Days,Weeks,Months";
+            $scope.intakemethod = "Oral,Injection,Ear,Eye,Nose,Inhaled,Rectal,Feeding";
+            $scope.problems = [{record_id: 0, value: "Add New"}];
+
+            $scope.saveMedication = function(){
+                console.log($scope.data);
+            }
+            
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-medications',
+                        params: {note_id: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data.existing_medications;
+
+                        console.log($scope.cards);
+                        console.log(response.data.message);
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+
+            $scope.swipedAway = function (val){
+                console.log('swiped: ' + val);
+                $scope.doRefresh();
+            }
+
+            $ionicModal.fromTemplateUrl('create-medication', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $scope.addMedication = function(){
+                $scope.modal.show();
+            }
+
+            $scope.doRefresh();
         })
 
         

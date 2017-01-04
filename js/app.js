@@ -745,6 +745,16 @@ angular.module('your_app_name', [
                         }
                     })
 
+                    .state('app.consultation-medication', {
+                        url: "/note-medication/{appId:string}",
+                        views: {
+                            'menuContent': {
+                                templateUrl: "views/app/consultation-medication.html",
+                                controller: 'ConsultationsMedicationCtrl'
+                            }
+                        }
+                    })
+
                     .state('app.notetype', {
                         //cache: false,
                         url: "/notetype",
