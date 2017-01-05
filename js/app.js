@@ -754,6 +754,25 @@ angular.module('your_app_name', [
                             }
                         }
                     })
+                    .state('app.consultation-investigation', {
+                        url: "/consultation-investigation/{appId:string}",
+                        views: {
+                            'menuContent': {
+                                templateUrl: "views/app/consultation-investigation.html",
+                                controller: 'ConsultationsInvestigationCtrl'
+                            }
+                        }
+                    })
+
+                    .state('app.consultation-procedure', {
+                        url: "/consultation-procedure/{appId:string}",
+                        views: {
+                            'menuContent': {
+                                templateUrl: "views/app/consultation-procedure.html",
+                                controller: 'ConsultationsProcedureCtrl'
+                            }
+                        }
+                    })
 
                     .state('app.notetype', {
                         //cache: false,

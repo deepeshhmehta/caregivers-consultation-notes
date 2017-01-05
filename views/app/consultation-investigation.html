@@ -1,0 +1,91 @@
+<ion-view class="tinder-cards-view">
+    <button class="button button-clear button-positive">Edit</button>
+    <ion-nav-title>
+        <span>Investigation</span>
+    </ion-nav-title>
+    
+    <ion-content scroll="true" class="bgwhite">
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()">
+        </ion-refresher>
+        
+         <div class="mt40 p15">
+           <p>some sensible message here</p>
+        </div>
+        <td-cards>
+          	<td-card ng-repeat="card in cards" id="td-card"
+                     on-transition-out="swipedAway(card.id)">
+                <h4 class="cardtitle">
+                    <span> {{card.investigation}} ({{card['status-2']}})</span>
+                </h4>
+                <div class="tdincard">
+                    <p ng-if="card['conducted-on-1']">Conducted on: {{card['conducted-on-1']}}</p>
+                    <p ng-if="card['to-be-conducted-before-1']">To be Conducted before: {{card['to-be-conducted-before-1']}}</p>
+                    <p ng-if="card['conducted-by']">Conducted by: {{card['conducted-by']}}</p>
+                    <p ng-if="card['result']">Result: {{card['result']}} ({{card['inference']}})</p>
+                    <p ng-if="card['reference-range']">Optimum Result: {{card['reference-range']}}</p>
+                    <p ng-if="card['notes-4']">Notes: {{card['notes-4']}}</p>
+                </div>
+                
+          	</td-card>
+        </td-cards>
+ 
+        <button ng-click="addInvestigation()" class="button button-positive button-block">Add New Investigation</button>
+    </ion-content>
+</ion-view>
+<script id="create-investigation" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar app-top-bar">
+            <h1 class="title">Investigation</h1>
+            <div class="button button-clear" ng-click="modal.hide()"><span class="icon ion-close"></span></div>
+        </ion-header-bar>
+        <ion-content>
+            
+                <div class="item item-divider"><span>Investigation *</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data.investigation" type = "text" required placeholder="Medicine Name" rows="25" cols="300" style="resize: none;">                    
+                  </input>
+                </label>
+
+                <div class="item item-divider"><span>Status *</span></div>                 
+                <ion-toggle ng-model="investigationStatus" ng-checked="0" ng-change="setToggle(investigationStatus)" toggle-class="toggle-positive"> Conducted </ion-toggle>
+                
+
+                <div class="item item-divider"><span>Will be / Conducted on *</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="conductedDate" type = "date" required rows="25" cols="300" style="resize: none;" ng-change="setDate(conductedDate)">                    
+                  </input>
+                </label>
+
+                <div class="item item-divider"><span>Related Problem *</span></div>  
+                <label class="item item-input">
+                    <select class="cselect" ng-model="data['related-problem']" ng-change="addOther(field.name, field.field, prob.record_id)" ng-init="- 1">
+                        <option value="" ng-selected="1">Select </option>
+                        <option ng-repeat="prob in problems"  value="{{prob.record_id}}">{{prob.value}}</option>
+                    </select>
+                </label>
+
+                <div class="item item-divider"><span>Prescribed By *</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data['prescribed-by-1']" type = "text" required placeholder="Prescribed by." rows="25" cols="300" style="resize: none;">                    
+                  </input>
+                </label>
+
+                <div class="item item-divider"><span>Conducted By *</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data['conducted-by']" type = "text" required placeholder="Conducted by." rows="25" cols="300" style="resize: none;">                    
+                  </input>
+                </label>
+
+                <div class="item item-divider"><span>Notes *</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data['notes-4']" type = "text" required placeholder="Notes." rows="25" cols="300" style="resize: none;">                    
+                  </input>
+                </label>              
+
+                <button ng-click="saveInvestigation()" class="button button-positive button-block">Add</button>
+            
+        </ion-content>
+    </ion-modal-view>
+</script>

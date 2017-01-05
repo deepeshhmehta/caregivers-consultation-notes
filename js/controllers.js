@@ -3420,7 +3420,85 @@ angular.module('your_app_name.controllers', [])
             $scope.doRefresh();
         })
 
+        .controller('ConsultationsInvestigationCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
+            $scope.noteid = get('noteid');
+            $scope.data = {};
+            $scope.data['noteid'] = $scope.noteid;
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-investigations',
+                        params: {note_id: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data;
+                        console.log($scope.cards[0]['reference-range']);
+                        console.log($scope.cards);
+                        console.log(response.data.message);
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+            
+
+            $scope.setToggle = function(val){
+                $scope.data['status-2'] = val?'Conducted':'To be Conducted';
+            }
+
+            var date = new Date();
+            $scope.FromDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+            console.log($scope.FromDate);
+            
+            $scope.setDate = function(val){
+                $scope.data['conducted-on-1']="0000-00-00";    
+                $scope.data['to-be-conducted-before-1']="0000-00-00";
+                if(date < val){
+                    console.log('future');
+                    $scope.data['to-be-conducted-before-1']=val;
+                }
+                else{
+                    console.log('past');
+                    $scope.data['conducted-on-1']=val;  
+                }
+            }
+            
+            $scope.swipedAway = function (val){
+                console.log('swiped: ' + val);
+                $scope.doRefresh();
+            }
+
+            $ionicModal.fromTemplateUrl('create-investigation', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $scope.addInvestigation = function(){
+                $scope.modal.show();
+            }
+
+            $scope.saveInvestigation = function(){
+                console.log($scope.data);
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-note-add-investigation',
+                        data: $scope.data
+                    }).then(function successCallback(response) {
+                        console.log('response');
+                        console.log(response.data);
+                    }, function errorCallback(response){
+                        console.log('error');
+                        console.log(response.data.message);
+                        alert('some field is missing');
+                    });
+            }
+            $scope.doRefresh();
+        })
         
+        
+        .controller('ConsultationsProcedureCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
+            $scope.noteid = get('noteid');
+        })
+
         .controller('ConsultationsNotesObservationsCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
             $scope.noteid = get('noteid');
             $scope.data = {};
