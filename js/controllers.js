@@ -3497,6 +3497,72 @@ angular.module('your_app_name.controllers', [])
         
         .controller('ConsultationsProcedureCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
             $scope.noteid = get('noteid');
+            console.log('noteid: ' + $scope.noteid);
+            $scope.data =  {};
+            $scope.data['noteid'] =  $scope.noteid;
+            var date = new Date();
+            
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-procedures',
+                        params: {note_id: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data;
+                        console.log($scope.cards);
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+            
+            $scope.setToggle = function(val){
+                $scope.data['status-1'] = val?'Conducted':'To be Conducted';
+            }
+
+            $scope.setDate = function(val){
+                $scope.data['conducted-on']="0000-00-00";    
+                $scope.data['to-be-conducted-before']="0000-00-00";
+                if(date < val){
+                    console.log('future');
+                    $scope.data['to-be-conducted-before']=val;
+                }
+                else{
+                    console.log('past');
+                    $scope.data['conducted-on']=val;  
+                }
+            }
+
+            $scope.swipedAway = function (val){
+                console.log('swiped: ' + val);
+                $scope.doRefresh();
+            }
+
+            $ionicModal.fromTemplateUrl('create-procedure', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $scope.addProcedure = function(){
+                $scope.modal.show();
+            }
+
+            $scope.saveProcedure = function(){
+                console.log($scope.data);
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-note-add-procedure',
+                        data: $scope.data
+                    }).then(function successCallback(response) {
+                        console.log('response');
+                        console.log(response.data);
+                    }, function errorCallback(response){
+                        console.log('error');
+                        console.log(response.data.message);
+                        alert('some field is missing');
+                    });
+            }
+            $scope.doRefresh();
         })
 
         .controller('ConsultationsNotesObservationsCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
