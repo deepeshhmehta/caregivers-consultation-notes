@@ -774,6 +774,26 @@ angular.module('your_app_name', [
                         }
                     })
 
+                    .state('app.consultation-referral', {
+                        url: "/consultation-referral/{appId:string}",
+                        views: {
+                            'menuContent': {
+                                templateUrl: "views/app/consultation-referral.html",
+                                controller: 'ConsultationsReferralCtrl'
+                            }
+                        }
+                    })
+
+                    .state('app.consultation-diet', {
+                        url: "/consultation-diet/{appId:string}",
+                        views: {
+                            'menuContent': {
+                                templateUrl: "views/app/consultation-diet.html",
+                                controller: 'ConsultationsDietCtrl'
+                            }
+                        }
+                    })                    
+
                     .state('app.notetype', {
                         //cache: false,
                         url: "/notetype",

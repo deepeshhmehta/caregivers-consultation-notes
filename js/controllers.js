@@ -3622,6 +3622,68 @@ angular.module('your_app_name.controllers', [])
             $scope.doRefresh();
         })
 
+        .controller('ConsultationsReferralCtrl',function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
+            $scope.noteid = get ('noteid');
+            $scope.data = {};
+            $scope.data['noteid'] = $scope.noteid;
+            console.log($scope.noteid);
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-referral',
+                        params: {note_id: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data;
+
+                        console.log($scope.cards);
+                    
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+            $scope.doRefresh();
+
+            $scope.setToggle = function(val){
+                $scope.data['status-1'] = val?'Conducted':'To be Conducted';
+            }
+            
+            $scope.swipedAway = function (val){
+                console.log('swiped: ' + val);
+                $scope.doRefresh();
+            }
+            
+            $ionicModal.fromTemplateUrl('create-referral', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $scope.addReferral = function(){
+                $scope.modal.show();
+            }
+            
+            $scope.saveReferral = function(){
+                console.log($scope.data);
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-note-add-referral',
+                        data: $scope.data
+                    }).then(function successCallback(response) {
+                        console.log('response');
+                        console.log(response.data);
+                    }, function errorCallback(response){
+                        console.log('error');
+                        console.log(response.data.message);
+                        alert('some field is missing');
+                    });
+            }
+        })
+
+        
+        .controller('ConsultationsDietCtrl',function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
+            console.log($scope.noteid = get('noteid'));
+        })
+
         .controller('ConsultationsNotesDiagnosisCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
             $scope.noteid = get('noteid');
             $scope.data = {};

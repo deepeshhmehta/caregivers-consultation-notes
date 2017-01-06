@@ -1,0 +1,79 @@
+<ion-view class="tinder-cards-view">
+    <button class="button button-clear button-positive">Edit</button>
+    <ion-nav-title>
+        <span>Referral</span>
+    </ion-nav-title>
+    
+    <ion-content scroll="true" class="bgwhite">
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()">
+        </ion-refresher>
+        
+         <div class="mt40 p15">
+           <p>some sensible message here</p>
+        </div>
+        <td-cards>
+          	<td-card ng-repeat="card in cards" id="td-card"
+                     on-transition-out="swipedAway(card.id)">
+                <h4 class="cardtitle">
+                    <span> {{card['referred-to']}}</span>
+                </h4>
+                <div class="tdincard">
+                    <p ng-if="card['referred-by']">Referred By: {{card['referred-by']}}</p>
+                    <p ng-if="card['referred-on']">On: {{card['referred-on']}}</p>
+                    <p ng-if="card['related-problem-5']">Related Problem: {{card['related-problem-5']}}</p>
+                    <p ng-if="card['notes-9']">Notes: {{card['notes-9']}}</p>
+                </div>
+                
+          	</td-card>
+        </td-cards>
+ 
+        <button ng-click="addReferral()" class="button button-positive button-block">Add New Referral</button>
+    </ion-content>
+</ion-view>
+<script id="create-referral" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar app-top-bar">
+            <h1 class="title">Referral</h1>
+            <div class="button button-clear" ng-click="modal.hide()"><span class="icon ion-close"></span></div>
+        </ion-header-bar>
+        <ion-content>
+            
+                <div class="item item-divider"><span>Referred by*</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data['referred-by']" type = "text" required placeholder="Procedure Name" rows="25" cols="300" style="resize: none;">                    
+                  </input>
+                </label>
+
+                <div class="item item-divider"><span>Referred to *</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data['referred-to']" type = "text" required placeholder="Body Location" rows="25" cols="300" style="resize: none;">                    
+                  </input>
+                </label>
+
+                <div class="item item-divider"><span>Reffered on *</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data['referred-on']" type = "date" required rows="25" cols="300" style="resize: none;">                    
+                  </input>
+                </label>
+
+                <div class="item item-divider"><span>Related Problem *</span></div>  
+                <label class="item item-input">
+                    <select class="cselect" ng-model="data['related-problem-1']" ng-change="addOther(field.name, field.field, prob.record_id)" ng-init="- 1">
+                        <option value="" ng-selected="1">Select </option>
+                        <option ng-repeat="prob in problems"  value="{{prob.record_id}}">{{prob.value}}</option>
+                    </select>
+                </label>
+
+                <div class="item item-divider"><span>Notes *</span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data['notes-9']" type = "text" required placeholder="Notes." rows="25" cols="300" style="resize: none;">                    
+                  </input>
+                </label>              
+
+                <button ng-click="saveReferral()" class="button button-positive button-block">Add</button>
+            
+        </ion-content>
+    </ion-modal-view>
+</script>
