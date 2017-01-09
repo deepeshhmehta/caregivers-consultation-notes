@@ -11,7 +11,6 @@
         </ion-refresher>
         
          <div class="mt40 p15">
-           <p>swipe away to delete an existing problem</p>
         </div>
         <td-cards>
           	<td-card ng-repeat="card in cards" id="td-card"
@@ -22,6 +21,7 @@
                 
           	</td-card>
         </td-cards>
+        
         <label class="item item-list listreq">
             <select ng-model = "newproblem.selectedproblem" class ="cselect" id="problemselect">
               <option ng-repeat="option in select" value={{option.id}}>{{option.problem}}</option>
@@ -31,6 +31,7 @@
             <input ng-model="newproblem.problem" type = "text" placeholder="Problem Name" class="hide" id="newproblem" />
         </label>
         <button ng-click="addProblem()" class="button button-positive button-block">Add History</button>
+       
         
   	
     </ion-content>

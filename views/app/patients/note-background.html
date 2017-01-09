@@ -1,6 +1,6 @@
 <div>
     <my-tabs class="ctabs">
-        <my-tab title="Patient">
+        <!-- <my-tab title="Patient">
             <div class="mtabcon" ng-controller="PatientHistoryCtrl">
                 <div ng-repeat="field in fields track by $index" >
                     <div ng-if="field.field != 'Patient' && field.field != 'Doctor'">
@@ -92,8 +92,51 @@
                     <div class="clr"></div>
                 </div>
             </div>
+        </my-tab> -->
+        
+        <!--new patient(background) tab-->
+        <my-tab title="Patient">
+            <div class="mtabcon" ng-controller="PatientBackgroundCtrl">
+                <div class="item item-divider"><span>Name </span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data.name" type = "text" required placeholder="Name"/>
+                </label>
+
+
+                <div class="item item-divider"><span>DOB </span></div>
+                <label class="item item-input listreq">
+                  <input type="date" ng-model ="data.dob"  required/>
+                </label>
+
+                <div class="item item-divider"><span>Gender</span></div>
+                <label class="item item-list listreq">
+                  <select ng-model = "data.gender" class ="cselect" required>
+                    <option value='1'>Male</option>
+                    <option value ='0'>Female</option>
+                  </select>
+                </label>
+             
+                <div class="item item-divider"><span>Phone </span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data.phone" type = "text" required placeholder="Name"/>
+                </label>
+
+                <div class="item item-divider"><span>Email </span></div> 
+                <label class="item item-input listreq">
+                  <input ng-model="data.email" type = "text" required placeholder="Name"/>
+                </label>
+                <button ng-click="updatePersonalDetails()" class="button button-positive button-block">Update</button>
+                <div ng-if="selCondition.length > '0'">
+                    <div class="row">
+                        <div class="col"><strong>Known Conditions </strong></div>
+                        <div class="col">: <span ng-repeat="sel in selCondition"> {{sel.condition}} <br/></span></div>
+                    </div>
+                    <div class="clr"></div>
+                </div>
+            </div>
         </my-tab>
-        <my-tab title="Family">
+
+        <!-- <my-tab title="Family">
             <div class="mtabcon" ng-controller="FamilyHistoryCtrl">
                 <p ng-if="recorddata.length == 0">No record(s) found.</p>
                 <div class="clr"></div>
@@ -104,9 +147,7 @@
                                 <h2 class="post-title">Relation: {{rdata.record_metadata[1].value}}</h2>
                             </div>
                             <div class="col col-25 txt-right">
-                                <!--                                <div class="infomore" ng-click="infomore('abc')">
-                                                                    <span class="infb"> {{intext}}</span> <i class="ion-android-arrow-forward"></i>
-                                                                </div>-->
+                            
                             </div>
                         </div>
                         <div class="post-content item item-text-wrap p0">
@@ -125,6 +166,65 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </my-tab> -->
+
+        <my-tab title ="Family">
+            <div class="mtabcon" ng-controller="FamilyBackgroundCtrl">
+                <ion-refresher
+                pulling-text="Pull to refresh..."
+                on-refresh="doRefresh()">
+                </ion-refresher>
+                <!-- <td-cards>
+                    <td-card ng-repeat="card in cards" id="td-card"
+                             ng-click ="selectedCard(card.id)"  
+                             on-transition-out="swipedAway(card.id)">
+                        <h4 class="cardtitle">
+                            {{card.relation.relation_name}}: {{card.relative_name}} ({{card.relative_age}} Years)
+                        </h4>
+                        
+                    </td-card>
+                </td-cards> -->
+                
+                <div class="list card post-item greenbox" ng-repeat="card in cards">
+                    <a ng-click="selectedCard(card.id)">
+                        <div class="card-content p0">
+                            <div class="row post-heading item item-text-wrap ">
+                                <div class="col col-70">
+                                    <h2 class="post-title">{{card.relation.relation_name}}: {{card.relative_name}} ({{card.relative_age}} Years)</h2>
+                                </div>
+                            </div>
+
+                            <div class="post-content item item-text-wrap p0" >
+                                <p ng-if="card.problems.length == 0"> No problems fed</p>
+                                <div class="row" ng-repeat="problem in card.problems">
+                                    <span>{{problem.problem.problem}}</span>
+                                </div>
+                                <div class="post-footer p0">
+                                    <div class="row">
+                                        <div class="col-80 ">Click to add more</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <label class="item item-list listreq">
+                    <select ng-model = "newrelation.selectedrelation" class ="cselect" id="problemselect">
+                      <option ng-repeat="option in select" value={{option.id}}>{{option.relation_name}}</option>
+                    </select>
+                </label>
+                <label class="item item-list listreq" ng-if="newrelation.selectedrelation == 0">
+                    <input ng-model="newrelation.relationname" type = "text" placeholder=" Relation name (Father/Mother)" id="newrelation" />
+                </label>
+                <label class="item item-list listreq">
+                    <input ng-model="newrelation.name" type = "text" placeholder="Name" />
+                </label>
+                <label class="item item-list listreq">
+                    <input ng-model="newrelation.age" type = "number" placeholder="Age" />
+                </label>
+                <button ng-click="addRelation()" class="button button-positive button-block">Add Relation</button>
             </div>
         </my-tab>
     </my-tabs>

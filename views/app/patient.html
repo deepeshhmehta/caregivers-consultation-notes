@@ -26,13 +26,18 @@
 
         <div class="maintab" style="margin:0;">
         <div style="margin:10px;">
-            <select class="cselectn" ng-model="ptab" ng-change="changemaincate(ptab)">
+        <div class="row tabnav" ng-if="1">
+            <div class="col"><a  class="pbackground options active" ng-click="tabClicked('pbackground')">Background</a></div>            
+            <div class="col"><a  class="precords options" ng-click="tabClicked('precords')">Records</a></div>    
+            <div class="col"><a  class="pconsults options" ng-click="tabClicked('pconsults')">Consults</a></div>    
+        </div>
+            <!-- <select class="cselectn" ng-model="ptab" ng-change="changemaincate(ptab)">
                 <option value="pbackground" selected>Background</option>
                 <option value="precords" >Records</option>
-                <option value="pconsults" >Consults</option>
+                <option value="pconsults" >Consults</option> -->
 <!--                <option value="pchats" >Chats</option>-->
-            </select>
-            </div>
+            <!-- </select> -->
+        </div>
         
         </div>
         <div class="clr"></div><div class="clr"></div>

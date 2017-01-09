@@ -792,6 +792,26 @@ angular.module('your_app_name', [
                                 controller: 'ConsultationsDietCtrl'
                             }
                         }
+                    })
+
+                    .state('app.consultation-task', {
+                        url: "/consultation-task/{appId:string}",
+                        views: {
+                            'menuContent': {
+                                templateUrl: "views/app/consultation-task.html",
+                                controller: 'ConsultationsTaskCtrl'
+                            }
+                        }
+                    })
+
+                    .state('app.consultation-note-records', {
+                        url: "/consultation-note-records/{appId:string}",
+                        views: {
+                            'menuContent': {
+                                templateUrl: "views/app/consultation-note-records.html",
+                                controller: 'ConsultationNoteRecordsCtrl'
+                            }
+                        }
                     })                    
 
                     .state('app.notetype', {
@@ -1377,7 +1397,7 @@ angular.module('your_app_name', [
 
                     .state('app.add-category', {
                         cache: false,
-                        url: "/add-category/{id:int}",
+                        url: "/add-category/{id:string}",
                         views: {
                             'menuContent': {
                                 templateUrl: "views/app/add-record.html",

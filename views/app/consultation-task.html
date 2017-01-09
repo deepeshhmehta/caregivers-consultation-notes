@@ -1,7 +1,7 @@
 <ion-view class="tinder-cards-view">
     <button class="button button-clear button-positive">Edit</button>
     <ion-nav-title>
-        <span>Diet</span>
+        <span>Tasks</span>
     </ion-nav-title>
     
     <ion-content scroll="true" class="bgwhite">
@@ -15,18 +15,19 @@
         </div>
         <td-cards>
           	<td-card ng-repeat="card in cards" id="td-card"
-                     on-transition-out="swipedAway(card.id)"
-                     ng-click="getDetails(card['record_id'])">
+                     on-transition-out="swipedAway(card.id)">
                 <h4 class="cardtitle">
-                    <span> {{card['start-date-4']}} To {{card['end-date-3']}}</span>
+                    <span> {{card['task-1']}} - ({{card['status-5']}})</span>                    
                 </h4>
-                <div class="tdincard" ng-if="card['notes-21']">
-                    <p >Notes: {{card['notes-21']}}</p>
+                <div class="tdincard">
+                    <p ng-if="card['no-of-times']">Once every {{card['no-of-times']}} {{card['no-of-frequency']}}</p>
+                    <p ng-if="card['start-time']">From: {{card['start-time']}}</p>
+                    <p ng-if="card['end-time']">To: {{card['end-time']}}</p>
                 </div>
                 
           	</td-card>
         </td-cards>
  
-        <button ng-click="addDiet()" class="button button-positive button-block">Add New Diet</button>
+        <button ng-click="addTask()" class="button button-positive button-block">Add New Medication</button>
     </ion-content>
 </ion-view>

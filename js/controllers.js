@@ -360,6 +360,8 @@ angular.module('your_app_name.controllers', [])
         })
 
         .controller('AddRecordCtrl', function ($scope, $http, $state, $stateParams, $compile, $ionicModal, $ionicHistory, $filter, $timeout, $ionicLoading, $cordovaCamera, $cordovaFile, $rootScope) {
+            $scope.noteid = get('noteid');
+            console.log($scope.noteid);
             $ionicLoading.show({template: 'Loading..'});
             $scope.interface = window.localStorage.getItem('interface_id');
             $scope.images = [];
@@ -396,6 +398,9 @@ angular.module('your_app_name.controllers', [])
             }).then(function successCallback(response) {
                 console.log(response.data);
                 $scope.record = response.data.record;
+                $scope.record['noteid'] = $scope.noteid;
+                console.log('hello');
+                console.log($scope.record);
                 $scope.fields = response.data.fields;
                 $scope.problems = response.data.problems;
                 $scope.doctrs = response.data.doctrs;
@@ -456,6 +461,7 @@ angular.module('your_app_name.controllers', [])
                     $ionicLoading.show({template: 'Adding...'});
                     var data = new FormData(jQuery("#addRecordForm")[0]);
                     callAjax("POST", domain + "records/save", data, function (response) {
+                        $scope.noteAdded = response.note_added;
                         console.log(response);
                         $ionicLoading.hide();
                         if (angular.isObject(response.records)) {
@@ -474,7 +480,12 @@ angular.module('your_app_name.controllers', [])
                                     console.log(response);
                                     if (response.data == 'Success') {
                                         alert("Records shared successfully!");
-                                        $state.go('app.patient', {'id': $scope.patientId}, {reload: true});
+                                        if($scope.noteAdded){
+                                            store({noteid: $scope.noteid});
+                                            $state.go('app.consultation-note-details', {}, {reload: true});
+                                        }else{
+                                            $state.go('app.patient', {'id': $scope.patientId}, {reload: true});
+                                        }
                                         //$state.go('app.records-view', {'id': $scope.categoryId, 'patientId': $scope.patientId, 'shared': 0}, {}, {reload: true});
                                     }
                                 }, function errorCallback(e) {
@@ -985,6 +996,7 @@ angular.module('your_app_name.controllers', [])
         })
 
         .controller('RecordDetailsCtrl', function ($scope, $http, $state, $stateParams, $timeout, $ionicModal, $rootScope, $sce, $ionicLoading) {
+            console.log($scope.noteid = get('noteid'));
             $ionicLoading.show({template: 'Loading..'});
             $scope.recordId = $stateParams.id;
             $scope.catId = $stateParams.catId;
@@ -2612,6 +2624,13 @@ angular.module('your_app_name.controllers', [])
             }, function errorCallback(e) {
                 console.log(e);
             });
+            $scope.tabClicked= function(cvalue){
+                console.log('hello hello tabs');
+                console.log(jQuery('#' + cvalue));
+                jQuery('.options').removeClass('active');
+                jQuery('.' + cvalue).addClass('active');
+                $scope.changemaincate(cvalue);
+            }
             $scope.changemaincate = function (cvalue) {
                 console.log(cvalue);
                 if (cvalue == 'pbackground') {
@@ -3225,17 +3244,18 @@ angular.module('your_app_name.controllers', [])
 
             $scope.swipedAway = function(val){
                 console.log(val);
-                $http({
-                        method: 'GET',
-                        url: domain + 'doctors/consultation-delete-relative-problem',
-                        params: {id: val}
-                    }).then(function successCallback(response) {
-                        console.log(response.data);
-                        alert(response.data.message);
-                        if(response.data.success == 1){
-                            $scope.doRefresh();
-                        }
-                    });
+                // $http({
+                //         method: 'GET',
+                //         url: domain + 'doctors/consultation-delete-relative-problem',
+                //         params: {id: val}
+                //     }).then(function successCallback(response) {
+                //         console.log(response.data);
+                //         alert(response.data.message);
+                //         if(response.data.success == 1){
+                //             $scope.doRefresh();
+                //         }
+                //     });
+                $scope.doRefresh();
             }
 
             $scope.addProblem = function(){
@@ -3329,9 +3349,9 @@ angular.module('your_app_name.controllers', [])
                     });
 
 
-            $scope.goUrl = function(val){
+            $scope.goUrl = function(val, catid, catname){
                 console.log(val);
-                store({'noteid': $scope.noteid});
+                store({'noteid': $scope.noteid,'catid' : catid, 'catname' : catname});
                 $state.go(val, {}, {relaod: true});
             }
 
@@ -3682,6 +3702,112 @@ angular.module('your_app_name.controllers', [])
         
         .controller('ConsultationsDietCtrl',function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
             console.log($scope.noteid = get('noteid'));
+            $scope.cards ={};
+            
+
+            $scope.checkIfSelf = function(val){
+                var ret = (val == window.localStorage.getItem('id'))? true : false;
+                return ret;
+            }
+
+            $scope.data = {};
+            $scope.data['noteid'] = $scope.noteid;
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-diet',
+                        params: {note_id: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data;
+
+                        console.log($scope.cards);
+                    
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+
+            $ionicModal.fromTemplateUrl('create-diet', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $scope.addDiet = function(){
+                store({'noteid': $scope.noteid});
+                $state.go('app.add-category', {'id': 21}, {reload: true});
+            }
+
+            $scope.getDetails = function(val){
+                console.log(val);
+                store({'noteid': $scope.noteid});
+                $state.go('app.record-details', {'id': val}, {reload: true});
+            }
+
+            $scope.doRefresh();
+        })
+
+        .controller('ConsultationsTaskCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
+            console.log($scope.noteid = get('noteid'));
+
+            $scope.data = {};
+            $scope.data['noteid'] = $scope.noteid;
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-task',
+                        params: {note_id: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data;
+
+                        console.log($scope.cards);
+                    
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+            $scope.doRefresh();
+
+            $scope.addTask = function(){
+                store({'noteid': $scope.noteid});
+                $state.go('app.add-category', {'id': 30}, {reload: true});
+            }
+        })
+
+        .controller('ConsultationNoteRecordsCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
+            console.log($scope.noteid = get('noteid'));
+            console.log($scope.catid = get('catid'));
+            console.log($scope.catname = get('catname'));
+
+            $scope.data = {};
+            $scope.data['noteid'] = $scope.noteid;
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-records',
+                        params: {note_id: $scope.noteid,category: $scope.catid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data;
+
+                        console.log($scope.cards);
+                    
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+            $scope.doRefresh();
+
+            $scope.addNew = function(val){
+                console.log(val);
+                store({'noteid': $scope.noteid});
+                $state.go('app.add-category', {'id':val}, {reload: true});
+            }
+
+            $scope.getDetails = function(val){
+                console.log(val);
+                store({'noteid': $scope.noteid});
+                $state.go('app.record-details', {'id': val}, {reload: true});
+            }
         })
 
         .controller('ConsultationsNotesDiagnosisCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
@@ -6627,7 +6753,100 @@ angular.module('your_app_name.controllers', [])
 //        }
             };
         })
+        .controller('FamilyBackgroundCtrl',function($scope, $http, $stateParams, $state, $rootScope, $ionicModal, $timeout, $filter, $cordovaCamera, $ionicLoading){
+            $scope.patientId = window.localStorage.getItem('patientId');
+            $scope.doctorId = window.localStorage.getItem('id');
+            $scope.cards = {};
+            $scope.select ={};
+            $scope.temp = {};
+            $scope.temp['id'] = '-1';
+            $scope.temp['relation_name'] = 'No Relation Selected';
+            $scope.temp2 = {};
+            $scope.temp2['id'] = 0;
+            $scope.temp2['relation_name'] = 'Add New';
+            $scope.newrelation = {};
+            $scope.newrelation['selectedrelation'] = '-1';
+            $scope.newrelation['relationname'] = "";
+            $scope.newrelation['name']="";
 
+            $scope.doRefresh = function(){
+                $http({
+                            method: 'GET',
+                            url: domain + 'doctors/consultation-family-list',
+                            params: {doctor_id: $scope.doctorId,patient_id: $scope.patientId}
+                        }).then(function successCallback(response) {
+                            $scope.cards = response.data.existing_relations;
+                            
+                            $scope.select={};
+                            $scope.select = response.data.relation_master;
+                            $scope.select.unshift($scope.temp);
+                            $scope.select.push($scope.temp2);
+
+                            console.log(response.data);
+                            console.log($scope.cards);
+                        });
+                $scope.$broadcast('scroll.refreshComplete');
+
+            }
+            $scope.addRelation = function (){
+                console.log($scope.newrelation['selectedrelation']);
+                console.log($scope.newrelation['relationname']);
+                console.log($scope.newrelation['name']);
+                if($scope.newrelation['selectedrelation'] != '-1'){
+                    $http({
+                            method: 'GET',
+                            url: domain + 'doctors/consultation-add-relation-relative',
+                            params: {doctor_id: $scope.doctorId, 
+                                    patient_id: $scope.patientId, 
+                                    relationid: $scope.newrelation['selectedrelation'],
+                                    relationname: $scope.newrelation['relationname'], 
+                                    relativename: $scope.newrelation['name'],
+                                    age: $scope.newrelation['age']
+                                }
+                        }).then(function successCallback(response) {
+                            
+                            alert(response.data.message);
+                            if(response.data.status == 1){
+                                $scope.doRefresh();
+                            }
+                        });
+                }else{
+                    alert('no relation selected');
+                }
+            }
+
+            $scope.selectedCard = function(val){
+                console.log(val);
+                store({'patientId': $scope.patientid, 'backurl': 'patient','relationid' : val});
+                $state.go('app.relativeproblems', {'appId': 0}, {relaod: false})
+            }
+
+            $scope.doRefresh();
+        })
+        .controller('PatientBackgroundCtrl',function($scope, $http, $stateParams, $state, $rootScope, $ionicModal, $timeout, $filter, $cordovaCamera, $ionicLoading){
+            console.log('patient background');
+            console.log($scope.patientId = window.localStorage.getItem('patientId'));
+            console.log($scope.doctorId = window.localStorage.getItem('id'));
+            $http({
+                    method: 'GET',
+                    url: domain + 'doctors/consultation-personal-details',
+                    params: {doctor_id: $scope.doctorId,patient_id: $scope.patientId}
+                }).then(function successCallback(response) {
+                    $scope.data = response.data;
+                    $scope.data['dob'] = new Date(response.data.dob);
+                    console.log($scope.data);
+                });
+            $scope.updatePersonalDetails = function(){
+                console.log(JSON.stringify($scope.data));
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/update-personal-details',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                    });
+            }      
+        })
         .controller('PatientHistoryCtrl', function ($scope, $http, $stateParams, $state, $rootScope, $ionicModal, $timeout, $filter, $cordovaCamera, $ionicLoading) {
             $ionicLoading.show({template: 'Loading..'});
             $scope.patientId = window.localStorage.getItem('patientId');
@@ -6642,7 +6861,7 @@ angular.module('your_app_name.controllers', [])
             $scope.selConditions = [];
             $scope.curTime = new Date();
             $scope.curTimeo = $filter('date')(new Date(), 'hh:mm a');
-            $http({
+             $http({
                 method: 'GET',
                 url: domain + 'doctrsrecords/get-about-fields',
                 params: {patient: $scope.patientId, userId: $scope.userId, doctorId: $scope.doctorId, catId: $scope.catId}

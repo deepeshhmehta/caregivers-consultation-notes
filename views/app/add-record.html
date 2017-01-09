@@ -17,6 +17,7 @@
                 <input type="hidden" ng-model="record.recordUser" value="{{userId}}" name="userId" />
                 <input type="hidden" ng-model="record.recordUser" value="{{patientId}}" name="patientId" />
                 <input type="hidden" ng-model="record.recordCat" value="{{category}}" name="recordCat" />
+                <input type="hidden" ng-model="record.noteid" value="{{noteid}}" name="noteid" />
                 <div class="brdT">
                     <div ng-repeat="field in fields" >  
                         <div ng-if="field.field == 'Prescribed By' || field.field == 'Measured By' || field.field == 'Referred By' || field.field == 'Performed By' || field.field == 'Created By'">
