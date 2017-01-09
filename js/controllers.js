@@ -2592,6 +2592,7 @@ angular.module('your_app_name.controllers', [])
         })
 
         .controller('PatientCtrl', function ($scope, $http, $stateParams, $ionicModal, $state, $ionicLoading) {
+            $scope.allCats = [{ name: 'Medication X', count: 2 }, { name: 'Medication 1', count: 24 }, { name: 'Medication 2', count: 26 },{ name: 'Medication 3', count: 21 }]
             $ionicLoading.show({template: 'Loading..'});
             $scope.patientId = $stateParams.id;
             $scope.userId = get('id');

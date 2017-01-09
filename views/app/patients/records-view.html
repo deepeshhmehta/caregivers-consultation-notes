@@ -1,10 +1,37 @@
 <div>
+    <style type="text/css">
+        .count { font-size: 20px; }
+        .card { margin:5px 5px; }
+    </style>
     <my-tabs class="themetabs">
         <my-tab title="Created by you ({{records.length}})" ng-click="subpage('createdbyu')"> 
             <!--  ng-click="subpage('createdbyu')"  -->
             <div class="tabcontainer" >
                 <p ng-if="records.length == 0">No record(s) found.</p>
-                <div class="list card post-item greenbox" ng-repeat="rec in records track by $index" ng-if="records.length > 0">
+</div> 
+
+<div ng-repeat="cat in allCats" ng-if="$index % 3 == 0" class="row" width="99%">
+    <div class="col greenbox card">
+        <div class="post-heading">
+            <h2 class="text-center">{{allCats[$index].name}}</h2>
+            <p class="text-center count">{{allCats[$index].count}} </p>
+        </div>
+    </div>
+    <div class="col greenbox card" ng-if="allCats.length > ($index + 1)">
+        <div class="post-heading">
+            <h2 class="text-center">{{allCats[$index + 1].name}}</h2>
+            <p class="text-center count">{{allCats[$index + 1].count}} </p>
+        </div>
+    </div>
+    <div class="col greenbox card"  ng-if="allCats.length > ($index + 2)">
+        <div class="post-heading">
+            <h2 class="text-center">{{allCats[$index + 2].name}}</h2>
+            <p class="text-center count">{{allCats[$index + 2].count}} </p>
+        </div>
+    </div>        
+</div>
+
+               <div class="list card post-item greenbox" ng-repeat="rec in records track by $index" ng-if="records.length > 0">
                     <div class="card-content p0">
                         <div class="row post-heading item item-text-wrap ">
                             <div class="col col-70">
