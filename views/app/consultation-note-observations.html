@@ -9,10 +9,7 @@
             pulling-text="Pull to refresh..."
             on-refresh="doRefresh()">
         </ion-refresher>
-        
-         <div class="mt40 p15">
-           <p>some sensible message here</p>
-        </div>
+        <button ng-click="addObservation()" class="button button-positive button-block">Add New Observation</button>
         <td-cards>
           	<td-card ng-repeat="card in cards" id="td-card"
                      on-transition-out="swipedAway(card.id)"
@@ -27,7 +24,7 @@
           	</td-card>
         </td-cards>
  
-        <button ng-click="addObservation()" class="button button-positive button-block">Add New Observation</button>
+        
     </ion-content>
 </ion-view>
 <script id="create-Observation" type="text/ng-template">
@@ -49,3 +46,4 @@
         </ion-content>
     </ion-modal-view>
 </script>
+</div>

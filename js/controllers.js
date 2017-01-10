@@ -2687,7 +2687,7 @@ angular.module('your_app_name.controllers', [])
             
         })
         .controller('PatientCtrl', function ($scope, $http, $stateParams, $ionicModal, $state, $ionicLoading) {
-            $scope.allCats = [{ name: 'Medication X', count: 2 }, { name: 'Medication 1', count: 24 }, { name: 'Medication 2', count: 26 },{ name: 'Medication 3', count: 21 }]
+            $scope.allCats = []
             $ionicLoading.show({template: 'Loading..'});
             $scope.patientId = $stateParams.id;
             $scope.userId = get('id');
@@ -2698,6 +2698,21 @@ angular.module('your_app_name.controllers', [])
             $scope.repeatNo = [];
             $scope.sharerepeatFreq = [];
             $scope.sharerepeatNo = [];
+
+            $http({
+                method: 'GET',
+                url: domain + 'doctors/get-record-count',
+                params: {doctorId: $scope.userId, patientId: $scope.patientId}
+            }).then(function successCallback(response) {
+                console.log('hello hello record count');
+                $scope.allCats = response.data;
+                console.log($scope.allCats);
+            })
+            $scope.gotopage = function(goUrl){
+                console.log('gotopage: ' + goUrl);
+                store({'patientId': $scope.patientId});
+                $state.go(goUrl, {}, {relaod: true});
+            }
             console.log($scope.patientId);
             window.localStorage.setItem('patientId', $scope.patientId)
             $http({
@@ -3440,11 +3455,23 @@ angular.module('your_app_name.controllers', [])
 
         .controller('ConsultationsNotesDetailsCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
             $scope.noteid = get('noteId');
+            $scope.tabnav = {};
+            $scope.tabnav['observations'] = 1;
             console.log($scope.noteid);
             $scope.userid = window.localStorage.getItem('id');
             $scope.options = {};
             $scope.i = 1;
             
+            $scope.tabClicked= function(val,url){
+                
+                angular.forEach($scope.tabnav, function(value, key){
+                    $scope.tabnav[key] = 0;
+                });
+                $scope.tabnav[val] = 1;
+                console.log($scope.tabnav);
+                console.log($state.href(url));
+                jQuery('#id'+val).attr('url',$state.href(url));
+            }
 
             $http({
                         method: 'GET',
@@ -3690,6 +3717,98 @@ angular.module('your_app_name.controllers', [])
                     });
             }
             $scope.doRefresh();
+        })
+
+        .controller('ConsultationsNotesTreatmentViewCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
+            console.log('treatmentview');
+            console.log($scope);
+        })
+        .controller('ConsultationsNotesDiagnosisViewCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
+            $scope.noteid = get('noteId');
+            $scope.data = {};
+            $scope.data['noteid'] = $scope.noteid;
+
+            $scope.addDiagnosis = function(){
+                $scope.modal.show();
+            }
+            $ionicModal.fromTemplateUrl('create-diagnosis', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-diagnosis',
+                        params: {note_id: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data.existing_diagnosis;
+
+                        console.log($scope.cards);
+                        console.log(response.data.message);
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+            $scope.saveDiagnosis = function(){
+                console.log(JSON.stringify($scope.data));
+                $scope.modal.hide();
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-notes-add-diagnosis',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                        $scope.doRefresh();
+                    });
+            }
+
+            $scope.doRefresh();
+        })  
+
+        .controller('ConsultationsNotesObservationViewCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
+           
+            $scope.noteid = get('noteId');
+            $scope.data = {};
+            $scope.data['noteid'] = $scope.noteid;
+            $scope.doRefresh = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-observations',
+                        params: {note_id: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data.existing_observations;
+
+                        console.log($scope.cards);
+                        console.log(response.data.message);
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+
+            $scope.addObservation = function(){
+                $scope.modal.show();
+            }
+            $ionicModal.fromTemplateUrl('create-Observation', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+            $scope.saveObservation = function(){
+                console.log(JSON.stringify($scope.data));
+                $scope.modal.hide();
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-notes-add-observations',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                        $scope.doRefresh();
+                    });
+            }
+
+            $scope.doRefresh();            
         })
 
         .controller('ConsultationsNotesObservationsCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {

@@ -1,0 +1,33 @@
+<div>
+	<div style="float:right">
+		<button ng-click="addDiagnosis()" class="button button-positive button-block">Add</button>
+	</div>
+      <div class="clr"></div>
+        <div class="list card post-item greenbox" ng-repeat="card in cards">
+            <a ng-click="">
+                <div class="card-content p0">
+                    <div class="row post-heading item item-text-wrap ">
+                        <div class="col col-70">
+                            <h2 class="post-title">
+                              Entry - {{$index + 1}} 
+                              <span>({{card.created_at|dateFormat3}})</span>
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="post-content item item-text-wrap p0" >
+                        <p ng-if="card.problems.length == 0"> No problems fed</p>
+                        <div class="row">
+                            <span>{{card.diagnosis}}</span>
+                        </div>
+                        <!-- <div class="post-footer p0">
+                            <div class="row">
+                                <div class="col-80 ">Click to add more</div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </a>
+        </div>
+  </td-cards>
+</div>

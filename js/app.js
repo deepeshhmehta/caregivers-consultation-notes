@@ -726,7 +726,7 @@ angular.module('your_app_name', [
                     })
 
                     .state('app.observations', {
-                        url: "/observations/{appId:string}",
+                        url: "/observations/{appId:string}/{noteid:string}",
                         views: {
                             'menuContent': {
                                 templateUrl: "views/app/consultation-note-observations.html",
