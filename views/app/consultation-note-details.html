@@ -8,7 +8,7 @@
 
         <div class="list catlist">
             <div class="maintab" style="margin:0;">
-                <div style="margin:10px;">
+                <div>
                     <div class="row tabnav" >
                         <div class="col" ng-repeat="option in options"><a  ng-class="(tabnav['{{option.name|tolowercase}}'] == 1)? 'active options {{option.name|tolowercase}}':'options {{option.name|tolowercase}}'" ng-click="tabClicked('{{option.name|tolowercase}}','{{option.url}}')">{{option.name|capitalize}}</a></div>   
                     </div>            

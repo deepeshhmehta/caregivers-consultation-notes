@@ -3,17 +3,15 @@
     <ion-nav-title>
         <span>{{catname}}</span>
     </ion-nav-title>
-    
+    <ion-nav-buttons side="right">
+        <button ng-click="addNew('{{catid}}')" class="button button-icon button-clear icon ion-plus"> Add</button>
+    </ion-nav-buttons>
     <ion-content scroll="true" class="bgwhite">
         <ion-refresher
             pulling-text="Pull to refresh..."
             on-refresh="doRefresh()">
         </ion-refresher>
         
-         <div class="mt40 p15">
-           <p>some sensible message here</p>
-        </div>
-        <td-cards>
             <!--task -->
           	<td-card ng-repeat="card in cards" id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 30">
                 <h4 class="cardtitle">
@@ -27,13 +25,15 @@
           	</td-card>
 
             <!--diet-->
-            <td-card ng-repeat="card in cards" id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 21" ng-click="getDetails(card['record_id'])">
-                <h4 class="cardtitle">
-                    <span> {{card['start-date-4']}} To {{card['end-date-3']}}</span>
-                </h4>
-                <div class="tdincard" ng-if="card['notes-21']">
-                    <p >Notes: {{card['notes-21']}}</p>
-                </div>            
+            <td-card ng-repeat="card in cards" id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 21" >
+                <a ng-click="getDetails(card['record_id'])">
+                    <h4 class="cardtitle">
+                        <span> {{card['start-date-4']}} To {{card['end-date-3']}}</span>
+                    </h4>
+                    <div class="tdincard" ng-if="card['notes-21']">
+                        <p >Notes: {{card['notes-21']}}</p>
+                    </div>            
+                </a>
             </td-card>
 
             <!--medication-->
@@ -90,12 +90,12 @@
                 <div class="tdincard">
                     <p ng-if="card['referred-by']">Referred By: {{card['referred-by']}}</p>
                     <p ng-if="card['referred-on']">On: {{card['referred-on']}}</p>
-                    <p ng-if="card['related-problem-5']">Related Problem: {{card['related-problem-5']}}</p>
+                    <!-- <p ng-if="card['related-problem-5']">Related Problem: {{card['related-problem-5']}}</p> -->
                     <p ng-if="card['notes-9']">Notes: {{card['notes-9']}}</p>
                 </div>                
             </td-card>
-        </td-cards>
+        
  
-        <button ng-click="addNew('{{catid}}')" class="button button-positive button-block">Add New</button>
+        
     </ion-content>
 </ion-view>

@@ -839,6 +839,10 @@ angular.module('your_app_name.controllers', [])
             $scope.repeatNo = [];
             $scope.userId = get('id');
             $scope.docId = get('id');
+            console.log('cat: ' + $scope.catId);
+            console.log('patient: ' + $scope.patientId);
+            console.log('user: ' + $scope.userId);
+            console.log('shared: ' + $scope.shared);
             $http({
                 method: 'GET',
                 url: domain + 'doctrsrecords/get-records-details',
@@ -2704,14 +2708,15 @@ angular.module('your_app_name.controllers', [])
                 url: domain + 'doctors/get-record-count',
                 params: {doctorId: $scope.userId, patientId: $scope.patientId}
             }).then(function successCallback(response) {
-                console.log('hello hello record count');
                 $scope.allCats = response.data;
                 console.log($scope.allCats);
             })
-            $scope.gotopage = function(goUrl){
+
+            $scope.gotopage = function(goUrl,cat){
+                cat = "" + cat +"";
                 console.log('gotopage: ' + goUrl);
-                store({'patientId': $scope.patientId});
-                $state.go(goUrl, {}, {relaod: true});
+                store({'patientId': $scope.patientId,'id':$scope.userId,shared: 0});
+                $state.go(goUrl, {'patientId': $scope.patientId,'userId' : $scope.userId, 'id':cat,shared: '0'}, {relaod: true});
             }
             console.log($scope.patientId);
             window.localStorage.setItem('patientId', $scope.patientId)
@@ -3721,7 +3726,20 @@ angular.module('your_app_name.controllers', [])
 
         .controller('ConsultationsNotesTreatmentViewCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
             console.log('treatmentview');
-            console.log($scope);
+
+            $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-note-treatment',
+                        params: {noteid: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.allCats = response.data;
+                        console.log($scope.options);
+                    });
+            $scope.gotopage = function(val, catid, catname){
+                console.log(val);
+                store({'noteid': $scope.noteid,'catid' : catid, 'catname' : catname});
+                $state.go(val, {}, {relaod: true});
+            }
         })
         .controller('ConsultationsNotesDiagnosisViewCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
             $scope.noteid = get('noteId');
