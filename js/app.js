@@ -1156,6 +1156,17 @@ angular.module('your_app_name', [
                         }
                     })
 
+                    .state('app.family-member', {
+                         cache: false,
+                        url: "/family-member/{id:string}",
+                        views: {
+                            'menuContent': {
+                                templateUrl: "views/app/family-member.html",
+                                controller: 'FamilyMemberCtrl'
+                            }
+                        }
+                    })
+
                     .state('app.doctr-services', {
                         //  cache: false,
                         url: "/doctr-services/{id:string}",

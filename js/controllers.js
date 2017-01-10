@@ -324,6 +324,16 @@ angular.module('your_app_name.controllers', [])
         })
 
         .controller('AdsCtrl', function ($scope, $http, $state, $ionicActionSheet, AdMob, iAd, $ionicModal) {
+            $http({
+                        method: 'GET',
+                        url: domain + 'records/get-doctor-record-categories',
+                        params: {userId: $scope.userId, interface: $scope.interface}
+                    }).then(function successCallback(response) {
+                        $scope.cats = response.data;   
+                    }, function errorCallback(response) {
+                        console.log(response);
+                    });
+
             $scope.interface = window.localStorage.getItem('interface_id');
             $scope.userId = get('id');
             // Load the modal from the given template URL
@@ -335,7 +345,7 @@ angular.module('your_app_name.controllers', [])
                         url: domain + 'records/get-doctor-record-categories',
                         params: {userId: $scope.userId, interface: $scope.interface}
                     }).then(function successCallback(response) {
-                        $scope.cats = response.data;
+                        $scope.cats = response.data;   
                         $scope.modal.show();
                     }, function errorCallback(response) {
                         console.log(response);
@@ -2590,7 +2600,92 @@ angular.module('your_app_name.controllers', [])
                 });
             };
         })
+        .controller('FamilyMemberCtrl',function($scope, $http, $stateParams, $ionicModal, $state, $ionicLoading){
+            console.log($scope.noteid = get('noteid'));
+            $scope.cards = {};
+            $scope.select ={};
+            $scope.temp = {};
+            $scope.temp['id'] = '-1';
+            $scope.temp['relation_name'] = 'No Relation Selected';
+            $scope.temp2 = {};
+            $scope.temp2['id'] = 0;
+            $scope.temp2['relation_name'] = 'Add New';
+            $scope.newrelation = {};
+            $scope.newrelation['noteid'] = $scope.noteid;
+            $scope.newrelation['relationid'] = '-1';
+            $scope.newrelation['relationname'] = "";
+            $scope.newrelation['relativename']="";
+            $scope.conId = [];
+            $scope.conIds = [];
+            $scope.selConditions = [];
+            $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-family-list',
+                        params: {noteid: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.cards = response.data.existing_relations;
+                        
+                        $scope.select={};
+                        $scope.select = response.data.relation_master;
+                        $scope.select.unshift($scope.temp);
+                        $scope.select.push($scope.temp2);
+                          
+                        console.log(response.data);
+                        console.log($scope.cards);
+                    });
 
+            $http({
+                method: 'GET',
+                url : domain+'doctors/consultation-quick-options',
+                params: {noteid: $scope.noteid}
+                    }).then(function successCallback(response) {
+                        $scope.conditions = response.data;
+                        
+                 
+                        console.log(response.data);
+                        console.log($scope.cards);
+                    });
+
+            $scope.addRelation = function(){
+                $ionicLoading.show({template: 'Loading..'});
+                $scope.newrelation['problemids'] = $scope.conIds;
+                console.log($scope.newrelation);
+                console.log($scope.conIds);
+                
+                $http({
+                            method: 'POST',
+                            url: domain + 'doctors/consultation-note-add-family-member',
+                            data : JSON.stringify($scope.newrelation)
+                        }).then(function successCallback(response) {
+                            $ionicLoading.hide();
+                            console.log(response.data);
+                            $state.go(response.data.redirect_url,{'id':  $stateParams.id}, {relaod: true});
+                        }, function errorCallback(e) {
+                            console.log(e);
+                        });
+            }
+
+            $scope.getCondition = function (id, con) {
+                console.log(id + "==" + con);
+                var con = con.toString();
+                if ($scope.conId[id]) {
+                    $scope.conIds.push(id);
+                    $scope.selConditions.push({'condition': con});
+                } else {
+                    var index = $scope.conIds.indexOf(id);
+                    $scope.conIds.splice(index, 1);
+                    for (var i = $scope.selConditions.length - 1; i >= 0; i--) {
+                        if ($scope.selConditions[i].condition == con) {
+                            $scope.selConditions.splice(i, 1);
+                        }
+                    }
+                }
+                jQuery("#selcon").val($scope.conIds);
+                console.log($scope.selConditions);
+                console.log($scope.conIds);
+            }
+            
+        })
         .controller('PatientCtrl', function ($scope, $http, $stateParams, $ionicModal, $state, $ionicLoading) {
             $ionicLoading.show({template: 'Loading..'});
             $scope.patientId = $stateParams.id;
@@ -2855,6 +2950,17 @@ angular.module('your_app_name.controllers', [])
                     else if (goUrl == 'app.consultationNoteOption') {
                         store({'patientId': $scope.patientId, 'backurl': 'patient'});
                         $state.go(goUrl, {'appId': 0}, {relaod: true});
+                    }else if (goUrl == 'app.family-member'){
+                    $http({
+                                method: 'GET',
+                                url: domain + 'doctors/consultation-note-id',
+                                params: {patientId: $scope.patientId, doctorId: $scope.userId}
+                            }).then(function successCallback(response) {
+                                $scope.noteid = response.data;
+                                store({'noteid': $scope.noteid});
+                                $state.go(goUrl, {'id': $scope.patientId},{relaod: true});
+                            });                        
+                        
                     }
                 };
             });

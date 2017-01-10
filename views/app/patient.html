@@ -73,12 +73,23 @@
     </ion-header-bar>
     <ion-content>
     <div class="list"></div>
+    <div class="greyblock item item-divider">Appointments</div>
     <div ng-click="go('app.doctr-services')" class="item item-divider">Book Appointment</div>
     <div class="list"></div>
-    
-    <div ng-click="go('app.consultationNoteOption')" class="item item-divider">Create Note</div>
+
     <div class="list"></div>
-    <div ng-controller="AdsCtrl"  ng-click="getCategory()" class="item item-divider">Add Records</div>
+    <div class="greyblock item item-divider">Background</div>
+    <div ng-click="go('app.family-member')" class="item item-divider">Add Family Member</div>
+    <div class="list"></div>
+    
+    
+    <div class="list"></div>
+
+    <div ng-controller="AdsCtrl">
+    <div class="greyblock item item-divider">Add Records</div>
+    <div ng-click="go('app.consultationNoteOption')" class="item item-divider">Create Note</div>
+    <div ng-repeat="cat in cats" ng-click="addRecord(cat.id)" class="item item-divider">{{cat.category}}</div>
+    </div>
 
 <!---    <div class="list">
     <div class="item item-divider">Add Record</div>
