@@ -6838,7 +6838,16 @@ progress {
     background-color: #444;
     box-shadow: none;
     color: #fff; }
-
+.dietdays{width:100%;}
+.filled-data{    color: #387EF5;
+                 border-color: #387EF5;}
+.filled-data .icon{color: #387EF5;}
+.filldata{background: #387EF5;
+          color: #fff;
+}
+.filldata .icon{
+    color: #fff;
+}
 .button-small {
     padding: 2px 4px 1px;
     min-width: 28px;
@@ -9879,6 +9888,10 @@ input[type="date"]:before{
 }
 .psrelative{position: relative; z-index: 999;}  
 
+.inbtn{    width: 28%;
+           margin: 6px 2%;
+           float:left;}
+.inbtn button{width:100%; padding: 5px 0;}
 
 
 /* added by leena END */

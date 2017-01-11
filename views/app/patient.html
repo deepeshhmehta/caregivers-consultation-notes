@@ -80,7 +80,7 @@
 
     <div ng-controller="AdsCtrl">
     <div class="greyblock item item-divider">Add Records</div>
-    <div ng-click="go('app.consultationNoteOption')" class="item item-divider">Create Note</div>
+    <div ng-click="createnoteandedit()" class="item item-divider">Create Note</div>
     <div ng-repeat="cat in cats" ng-click="addRecord(cat.id)" class="item item-divider">{{cat.category}}</div>
     </div>
 

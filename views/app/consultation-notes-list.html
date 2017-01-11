@@ -9,15 +9,8 @@
             pulling-text="Pull to refresh..."
             on-refresh="doRefresh()">
         </ion-refresher>
-        
-        <!-- <td-cards>
-          	<td-card ng-repeat="card in cards" id="td-card" on-transition-out="swipedAway(card.id)" ng-click="openNotesDetails(card.id)">
-                <h4 class="cardtitle">
-                    {{card.date}} <div style="float:right">View</div>
-                </h4>                
-          	</td-card>
-        </td-cards> -->
-        <div class="list cdetail-list" >
+      
+        <div class="list cdetail-list" ng-if="createnew != 1" >
             <div class="chatlist achat" ng-repeat="card in cards">
                 <a class="item item-icon-right" ng-click="openNotesDetails(card.id)">           
                     <span class="title">{{card.date| dateFormat3}}</span>                        
@@ -25,13 +18,15 @@
                 </a>
             </div>
         </div>
-        <!-- <label class="item item-list listreq">
-            <input ng-model="newnote.title" type = "text" placeholder="Title" class="hide" id="newnote" />
-        </label>
-        <label class="item item-input listreq">
-            <input type="date" ng-model ="newnote.date" value={{newnote.date}}  required/>
-        </label>
-        <button ng-click="addNote()" class="button button-positive button-block">Add Note</button> -->
+        <div ng-if="createnew == 1">
+          <label class="item item-list listreq">
+              <input ng-model="newnote.title" type = "text" placeholder="Title" class="hide" id="newnote" />
+          </label>
+          <label class="item item-input listreq">
+              <input type="date" ng-model ="newnote.date" value={{newnote.date}}  required/>
+          </label>
+          <button ng-click="addNote()" class="button button-positive button-block">Add Note</button>
+        </div>
         
   	
     </ion-content>

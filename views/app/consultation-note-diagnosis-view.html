@@ -1,7 +1,12 @@
 <div>
-	<div style="float:right">
-		<button ng-click="addDiagnosis()" class="button button-positive button-block">Add</button>
-	</div>
+    <div style="padding:2px">
+        <div style ="float:left">
+            <a ng-click="shareDiagnosis(cards)" class="button btn-share"><i class="icon ion-android-share-alt"/></a>
+        </div>
+        <div style="float:right">
+            <a ng-click="addDiagnosis()" class="button btn-share"><i class="icon ion-ios-plus-outline"/></a>        
+        </div>
+    </div>
       <div class="clr"></div>
         <div class="list card post-item greenbox" ng-repeat="card in cards">
             <a ng-click="">
@@ -25,6 +30,13 @@
                                 <div class="col-80 ">Click to add more</div>
                             </div>
                         </div> -->
+                    </div>
+                     <div class="row recordrow" >
+                        <div class="col selectrecord">
+                                <ion-checkbox onclick="selectcheckbox(this)" ng-model="diagnosisId[card.id]" ng-value="{{card.id}}" ng-change="getDiagnosisIds('{{card.id}}')">
+                                    Select
+                                </ion-checkbox>
+                        </div>
                     </div>
                 </div>
             </a>

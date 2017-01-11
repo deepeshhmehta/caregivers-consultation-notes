@@ -1,71 +1,65 @@
 <ion-view class="records-view">
     <ion-nav-title>
-        <span>Records</span> 
-        <!--        <button class="button" ng-click="print()">Print</button>-->
+        <span>{{category[0].category}}</span>
+        <!---<button class="button" ng-click="print()">Print</button>--->
     </ion-nav-title>
-
     <div class="item item-divider mtop44" style="font-size: 18px; min-height: 45px; text-align:center;">
-        <select class="selectheader" ng-model="catId" ng-change="getRecords(catId)">
-            <option ng-repeat="cat in category" value="{{cat.id}}" ng-selected="{{catId == cat.id}}" >{{cat.category}}</option>
-        </select>
+        <span  ng-if="apkLanguage == 'english'">  Records- {{createdby.length}}</span>
+        <span  ng-if="apkLanguage != 'english'">  {{langtext.records[language]}}-  {{createdby.length}} </span>
     </div>
-    <!--    <div class="bar bar-subheader cbar divider-2" style="margin-top:45px;">
-            <div class="row">
-                <div class="col-50"><a  ui-sref="app.filter"><h4 class="subhead"><i class="icon ion-funnel"></i> Filter</h4></a></div>
-                <div class="col-50"><h4 class="subhead">Sort <i class="icon ion-ios-arrow-thin-down"></i></h4> </div>
-            </div>
-        </div>-->
-
     <ion-content>
+        <ion-refresher pulling-text="Pull to refresh..."  on-refresh="doRefresh()">
+        </ion-refresher>
         <div class="list recordview" style="margin-top: 50px;" >
             <div class="mt15" ng-if="records.length == 0"> <p class="txt-center" >No records here. Add now to get started.</p></div>
             <div class="posts-list"  ng-repeat="rec in records track by $index" ng-if="records.length > 0">
-                <div  class="list card post-item">
-                    <a ui-sref="app.record-details({'id' : rec.id, 'patientId': patientId, 'catId': catId, 'res' : 'json'})" class="post-content item item-text-wrap">
+                <div  class="list card post-item"> <!---- ui-sref="{{catId == '8'?  app.preview-note({'id' : rec.id, 'appId': 1, 'res' : 'json'}):app.record-details({'id' : rec.id, 'shared': shared, 'res' : 'json'})}}"--->
+<!--                    <a ng-click="viewDetails(rec.id, rec.appointment_id, rec.user_id, rec.for, rec.doctor_id)" class="post-content item item-text-wrap">-->
+                        <div class="item item-divider mt15 ng-binding" >{{rec.share_with.fname}} {{rec.share_with.lname}}</div>
                         <div class="row pr-b10">
-                            <div class="col" ng-repeat="detail in rec.record_metadata| limitTo: limit">
+                            <div class="col" ng-repeat="detail in rec.record_metadata| limitTo: limit"> 
                                 <!--{{$index == 0 ? '<p>': ''}} -->
-                                <p>
-                                    <strong ng-if="detail.fields.name != 'no-of-frequency-1' && detail.fields.name != 'no-of-times'">{{detail.fields.field| capitalize}}</strong><br/>
-                                    <span ng-if="detail.fields.field == 'Prescribed By' || detail.fields.field == 'Measured By' || detail.fields.field == 'Doctor' || detail.fields.field == 'Referred By' || detail.fields.field == 'Performed By' || detail.fields.field == 'Consultant'">
-                                        {{doctors[$parent.$parent.$index].fname}} {{doctors[$parent.$parent.$index].lname}}
+
+                                <strong ng-if="detail.fields.name != 'no-of-frequency-1' && detail.fields.name != 'no-of-times'">{{detail.fields.field| capitalize}}  </strong><br/>
+
+                                <span ng-if="detail.fields.field == 'Prescribed By' || detail.fields.field == 'Measured By' || detail.fields.field == 'Referred By' || detail.fields.field == 'Performed By' || detail.fields.field == 'Consultant'">
+                                    {{doctors[$parent.$parent.$index]}}
+                                </span>
+                                <span ng-if="detail.fields.field == 'Related Problem'" >
+                                    {{problems[$parent.$parent.$index].value}}
+                                </span>
+                                <span ng-if="category[0].id == 30 && detail.fields.field == 'Frequency'" >
+                                    <span ng-if="detail.value == 'Repeat'">Once Every {{repeatNo[$parent.$parent.$parent.$parent.$index]}} {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
+                                    <span ng-if="detail.value != 'Repeat'">{{detail.value}}</span>
+                                </span>
+                                <span ng-if="category[0].id == 3 && detail.fields.name == 'frequency'" >
+                                    <span>{{detail.value}} time{{detail.value>1? 's':''}} in {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
+                                </span>
+                                <span ng-if="detail.fields.field == 'Patient'" >
+                                    {{patient[$parent.$parent.$index].fname}} {{patient[$parent.$parent.$index].lname}}
+                                </span>
+
+                                <span ng-if="detail.fields.field_type != '5' && detail.fields.name != 'frequency' && detail.fields.name != 'no-of-frequency-1' && detail.fields.name != 'no-of-frequency' && detail.fields.name != 'no-of-times' && detail.fields.field != 'Patient' && detail.fields.field != 'Frequency' && detail.fields.field != 'Prescribed By' && detail.fields.field != 'Measured By' && detail.fields.field != 'Referred By' && detail.fields.field != 'Performed By' && detail.fields.field != 'Consultant' && detail.fields.field != 'Related Problem'">
+                                    <span ng-if="detail.fields.field_type == 8 && detail.value != ''">
+                                        <span ng-if="detail.field_id == 'consultation-date'" >{{detail.value}}</span>
+                                        <span ng-if="detail.field_id != 'consultation-date'" >{{detail.value|dateFormat4}}</span>
                                     </span>
-                                    <span ng-if="detail.fields.field == 'Related Problem'" >
-                                        {{problems[$parent.$parent.$index].value}}
+                                    <span ng-if="detail.fields.field_type == 12">{{detail.value|time1}}</span>
+                                    <span ng-if="detail.fields.field_type != 8 && detail.fields.field_type != 12">
+                                        <span ng-if="detail.value == ''">NA</span>
+                                        <span ng-if="detail.value != ''">{{detail.value}}</span>
                                     </span>
-                                    <span ng-if="catId == 30">
-                                        <span ng-if="detail.fields.field == 'Frequency'" >
-                                            <span ng-if="detail.value == 'Repeat'">Once Every {{repeatNo[$parent.$parent.$parent.$parent.$index]}} {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
-                                            <span ng-if="detail.value != 'Repeat'">{{detail.value}}</span>
+                                </span>
+                                <span ng-if="detail.fields.field_type == '5'">
+                                    <span ng-repeat="attach in rec.attachments" ng-init="selData = (attach.orginial_name).split('.')">
+                                        <span style="cursor: pointer;" class="" ng-click="showm(attach.host, attach.attachment_path, attach.orginial_name)" >
+                                            <span class="ico"><i class="ion-paperclip"></i></span> ({{$index + 1}})
                                         </span>
                                     </span>
-                                    <span ng-if="category[0].id == 3">
-                                        <span ng-if="detail.fields.name == 'frequency'" >
-                                            <span>{{detail.value}} time{{detail.value>1? 's':''}} in {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
-                                        </span>
-                                    </span>
-                                    <span ng-if="catId != 30">
-                                        <span ng-if="detail.fields.field == 'Frequency'" ng-init="fdata = ((detail.value) / 24)">
-                                            {{fdata}} time{{fdata!=1? 's':''}} in day{{fdata!=1? 's':''}}
-                                        </span>
-                                    </span>
-                                    <span ng-if="detail.fields.field == 'Patient'" >
-                                        {{patient[$parent.$parent.$index].fname}} {{patient[$parent.$parent.$index].lname}}
-                                    </span>
-                                    <span ng-if="detail.fields.field == 'Case Id'" >
-                                        {{cases[$parent.$parent.$index].value}}
-                                    </span>
-                                    <span ng-if="detail.fields.name != 'no-of-times' && detail.fields.field != 'Frequency' && detail.fields.field != 'Patient' && detail.fields.field != 'Case Id' && detail.fields.field != 'Doctor' && detail.fields.field != 'Prescribed By' && detail.fields.field != 'Measured By' && detail.fields.field != 'Referred By' && detail.fields.field != 'Performed By' && detail.fields.field != 'Consultant' && detail.fields.field != 'Related Problem'">
-                                        <span ng-if="detail.fields.field_type == 8 && detail.value != ''"><span ng-if="detail.field_id == 'consultation-date'" >{{detail.value}}</span><span ng-if="detail.field_id != 'consultation-date'" >{{detail.value|dateFormat4}}</span></span>
-                                        <span ng-if="detail.fields.field_type == 12">{{detail.value|time1}}</span>
-                                        <span ng-if="detail.fields.field_type != 8 && detail.fields.field_type != 12">
-                                            <span ng-if="detail.value == ''">NA</span>
-                                            <span ng-if="detail.value != ''">{{detail.value}}</span>
-                                        </span>
-                                    </span>
-                                    <span ng-if="detail.fields.name == 'no-of-times'">
-                                    </span>
-                                </p>
+                                </span>
+                                <!--                                    <span ng-if="detail.fields.name == 'no-of-times'"> 
+                                                                    </span>-->
+
                                 <!--{{$index % 2 == 0|| $index == limit? '</p>' : ''}}
                                 {{$index % 2 == 0 && $index < limit ? '<p>' : ''}} -->
                             </div>	
@@ -75,11 +69,25 @@
                         </div>
                         <div class="attachcard" ng-if="rec.attachments.length != 0">
                             <i class="ion-paperclip"></i></div>
-                    </a>
+<!--                    </a>-->
 
-                    <div class="row recordrow">
-                        <div class="col selectrecord"><ion-checkbox onclick="selectcheckbox(this)" ng-model="recId[rec.id]" ng-value="{{rec.id}}" ng-change="getRecIds('{{rec.id}}')"> Select</ion-checkbox></div>
-                        <div class="col btview"><a ui-sref="app.record-details({'id' : rec.id, 'patientId': patientId, 'catId': catId, 'res' : 'json'})" ><div class="card-viewbtn button-positive">View</div></a></div>
+                    <div class="row recordrow" >
+                        <div class="col radiorecord" style="display: none">
+                            <ion-radio ng-model="orderRec" ng-value="{{rec.id}}" ng-click="selectradio('{{rec.id}}')">Order This</ion-radio>
+                        </div>
+                        <div class="col selectrecord">
+                            <ion-checkbox onclick="selectcheckbox(this)" ng-model="recId[rec.id]" ng-value="{{rec.id}}" ng-change="getRecIds('{{rec.id}}')"> Select</ion-checkbox>
+                        </div>
+                        <div class="col btview" ng-if="apkLanguage == 'english'">
+                            <a ng-click="viewDetails(rec.id, rec.appointment_id, rec.user_id, rec.for, rec.doctor_id)" >
+                                <div class="card-viewbtn button-positive">View</div>
+                            </a>
+                        </div>
+                        <div class="col btview" ng-if="apkLanguage != 'english'">
+                            <a ng-click="viewDetails(rec.id, rec.appointment_id, rec.user_id, rec.for, rec.doctor_id)" >
+                                <div class="card-viewbtn button-positive">{{langtext.view[language]}}</div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,20 +95,40 @@
     </ion-content>
 
 
+    <div class ="fixbtn right ion-ios-cart ordercart" ng-click ="placeOrder()"> </div>
+    <div class="footerbar button-bar " ng-if="apkLanguage != 'english'" id="rec1" ng-show="shared == 0">
+<!--         <a class="button btn-delete" ng-click="recordDelete()"><i class="icon ion-trash-b"></i> {{langtext.delete[language]}}</a>
+ -->        <a class="button btn-share" ng-click="recordShare()"><i class="icon ion-android-share-alt"></i> {{langtext.share[language]}}</a>
+        <a class="button btn-add" ui-sref="app.add-category({'id': catId})" ui-sref-opts="{reload: true}" ><i class="icon ion-android-add-circle"></i> {{langtext.add[language]}}</a> 
 
-    <div class="footerbar button-bar" id="rec1" >
-        <a class="button btn-delete" style="width:50%;" ng-click="recordDelete()"><i class="icon ion-trash-b"></i> Delete</a>
-        <a class="button btn-share" style="width:50%;"  ng-click="recordShare()"><i class="icon ion-android-share-alt"></i> Share</a> 
-        <a class="button btn-add" style="width:50%;" ng-controller="AdsCtrl"  ng-click="getCategory(rec.id)"><i class="icon ion-android-add-circle"></i> Add </a> 
+    </div>
+    <div class="footerbar button-bar " ng-if="apkLanguage == 'english'" id="rec1" ng-show="shared == 0">
+<!--         <a class="button btn-delete" ng-click="recordDelete()"><i class="icon ion-trash-b"></i> Delete</a>
+ -->        <a class="button btn-share" ng-click="recordShare()"><i class="icon ion-android-share-alt"></i> Share</a>
+        <a class="button btn-add" ui-sref="app.add-category({'id': catId})" ui-sref-opts="{reload: true}" ><i class="icon ion-android-add-circle"></i> Add</a> 
     </div>
 
-    <div class="footerbar button-bar rec2" id="rec2">        
+    <div class="footerbar button-bar rec2" ng-if="apkLanguage == 'english'" id="rec2" ng-show="shared == 0"> 
         <a class="button btn-delete" ng-click="CancelAction()"><i class="icon ion-android-close"></i> Cancel</a>
-        <a class="button btn-share" ng-click="share()"><i class="icon ion-android-share-alt"></i> Share</a>
+        <a class="button btn-share" ng-click="modal.show()"><i class="icon ion-android-share-alt"></i> Share</a>
     </div>
-    <div class="footerbar button-bar rec3" id="rec3">        
+    <div class="footerbar button-bar rec2" ng-if="apkLanguage != 'english'" id="rec2" ng-show="shared == 0"> 
+        <a class="button btn-delete" ng-click="CancelAction()"><i class="icon ion-android-close"></i> {{langtext.cancel[language]}}</a>
+        <a class="button btn-share" ng-click="modal.show()"><i class="icon ion-android-share-alt"></i> {{langtext.share[language]}}</a>  
+    </div>
+
+    <div class="footerbar button-bar rec3" ng-if="apkLanguage == 'english'" id="rec3" ng-show="shared == 0">        
         <a class="button btn-share" ng-click="CancelAction()"><i class="icon ion-android-close"></i> Cancel</a>
         <a class="button btn-delete" ng-click="delete()"><i class="icon ion-trash-b"></i> Delete</a>
+    </div>
+    <div class="footerbar button-bar rec3" ng-if="apkLanguage != 'english'" id="rec3" ng-show="shared == 0">        
+        <a class="button btn-share" ng-click="CancelAction()"><i class="icon ion-android-close"></i> {{langtext.cancel[language]}}</a>
+        <a class="button btn-delete" ng-click="delete()"><i class="icon ion-trash-b"></i> {{langtext.delete[language]}}</a>
+    </div>
+
+    <div class="footerbar button-bar rec4" id="rec4" ng-show="shared == 0" style="display: none;">        
+        <a class="button btn-delete" ng-click="CancelAction()"><i class="icon ion-android-close"></i> Cancel</a>
+        <a class="button btn-share" ng-click="confirmOrder()"><i class="icon ion-ios-cart"></i> Place</a>
     </div>
 
 </ion-view>
@@ -122,3 +150,22 @@
     </ion-modal-view>
 </script>
 
+<script id="filesview.html" type="text/ng-template">
+    <div class="modal">
+    <header class="bar bar-header bar-positive">
+    <h1 class="title">Attached Files</h1>
+    <button class="button" ng-click="print()">Print</button>
+    </header>
+    <content has-header="true" padding="true" class="fullwh">
+    <div class="mcontent">
+
+    <div class="viewattachfile" ng-if="value!=''">
+    <img src="{{value}}">
+    </div>
+    </div>
+    </content>
+    <div  ng-if="apkLanguage == 'english'" class="bar bar-footer" style="z-index:999;"><div class="button button-positive" style="width:100%;" ng-click="closeModal()">Cancel</div>
+    <div  ng-if="apkLanguage != 'english'" class="bar bar-footer" style="z-index:999;"><div class="button button-positive" style="width:100%;" ng-click="closeModal()"> {{langtext.cancel[language]}}</div>
+    </div>
+
+</script>
