@@ -4043,9 +4043,7 @@ angular.module('your_app_name.controllers', [])
                     });
             }
 
-            $scope.doRefresh();
-
-            
+            $scope.doRefresh();            
         })
 
         .controller('ConsultationsNotesDetailsCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
