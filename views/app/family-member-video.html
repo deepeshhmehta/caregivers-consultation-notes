@@ -1,0 +1,22 @@
+<div>
+    <div class="item item-divider mt15" >Relationship</div>
+  	<label class="item item-list listreq">
+        <select ng-model = "newrelation.relationid" class ="cselect" id="problemselect">
+          <option ng-repeat="option in select" value={{option.id}}>{{option.relation_name}}</option>
+        </select>
+    </label>
+    <label class="item item-list listreq" ng-if="newrelation.relationid == 0">
+        <input ng-model="newrelation.relationname" type = "text" placeholder=" Relation name (Father/Mother)" id="newrelation" />
+    </label>
+    <div class="item item-divider mt15" >Name</div>
+    <label class="item item-list listreq">
+        <input ng-model="newrelation.relativename" type = "text" placeholder="Name" />
+    </label>
+    <div class="item item-divider mt15" >Age</div>
+    <label class="item item-list listreq">
+        <input ng-model="newrelation.age" type = "number" placeholder="Age" />
+    </label>
+    <div class="item item-divider mt15" > Quick History
+        <button class="Cstmbutn button-small mb15 col-25" style="float:right; padding:0;" ng-controller="knowConditionCtrl" ng-click="modal.show()"><span class="icon ion-plus-circled"></span> Add </button>
+    </div>
+</div>

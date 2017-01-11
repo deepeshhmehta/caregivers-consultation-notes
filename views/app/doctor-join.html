@@ -21,44 +21,26 @@
         </div>
 
         <div class="crighttab greentab" id="cstab1">
-            <div class="ctabbtn" ng-click="pulltab('cstab1')">
+            <!-- <div class="ctabbtn" ng-click="pulltab('cstab1')">
                 <span class="ion-plus"></span>
-            </div>
+            </div> -->
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
-                    <div class="row">
-                        <div class="maintab">
-                            <select class="cselectn" ng-model="mntab"  ng-change="changejoincate(mntab)">
-                                <option value="ntcase" selected>Case</option>
-                                <option value="ntbackground" >Background</option>
-                                <option value="ntnote" >Notes</option>
-                                <option value="nttreatment" >Treatment</option>
-                            </select>
-                            <div class="col txt-right">
-                                <button class="button button-positive brd0" ng-click="submit()">Save All</button>
-                            </div>
-                        </div>
+                   
+                    <div class="clr"></div><div class="clr"></div>
+                    <div class="sldebxcontent" ng-show="1">
+                        <div ng-include src="'views/app/note-background-video.html'" ></div>                
                     </div>
-                    <div class="sldebxcontent" ng-show="notetcase">
-                        <div ng-include src="'views/app/video-note/note-case.html'" ></div>
-                    </div>
-                    <div class="sldebxcontent" ng-show="notebackground">
-                        <div ng-include src="'views/app/video-note/note-background.html'" ></div>                        
-                    </div>
-                    <div class="sldebxcontent" ng-show="notetnote">
-                        <div ng-include src="'views/app/video-note/notes.html'" ></div>                        	
-                    </div>	
-                    <div class="sldebxcontent" ng-show="notetreatment">
-                        <div ng-include src="'views/app/video-note/treatment-plan.html'" ></div>                        
-                    </div>
+
+                    
                 </ion-scroll>
             </div>
         </div>
 
         <div class="crighttab greentab" id="cstab2" >
-            <div class="ctabbtn" ng-click="pulltab('cstab2')" style="top:45px;">
+            <!-- <div class="ctabbtn" ng-click="pulltab('cstab2')" style="top:45px;">
                 <span class="ion-eye"></span>
-            </div> 
+            </div>  -->
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
                     <div class="maintab row">
@@ -79,9 +61,6 @@
                     <div class="sldebxcontent" ng-show="pconsultsView">
                         <div ng-include src="'views/app/preview/consults-view.html'" ></div>                        
                     </div>
-                    <!--<div class="sldebxcontent" ng-show="pchatsView">
-                        <div ng-include src="'views/app/preview/chats-view.html'" ></div>                        
-                    </div>-->
                 </ion-scroll>
             </div>
             <div class="clr"></div>
@@ -134,4 +113,21 @@
     </div>
     </content>
     <div class="bar bar-footer" style="z-index:999;"><div class="button button-positive" style="width:100%;" ng-click="filemodal.hide()">Cancel</div></div>
+</script>
+
+<script id="knowcondition" type="text/ng-template">
+    <ion-modal-view>
+    <ion-header-bar class="bar app-top-bar">
+    <h1 class="title">Add Quick History</h1>
+    <button class="button button-clear" ng-click="modal.hide()">Cancel</button>
+    </ion-header-bar>
+    <ion-content>
+    <ion-list>
+    <ion-checkbox ng-repeat="con in conditions track by $index" ng-model="conId[con.id]" ng-click="getCondition({{con.id}},'{{con.condition}}')" ng-checked="getPreCon({{con.id}})" >{{con.condition}}</ion-checkbox>
+    </ion-list>
+    </ion-content>
+    <div class="fixedbar">
+    <div class="button btn-add"  ng-click="modal.hide()" ><i class="ion-check"></i> Submit</div>
+    </div>
+    </ion-modal-view>
 </script>

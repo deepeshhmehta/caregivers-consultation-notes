@@ -3219,7 +3219,25 @@ angular.module('your_app_name.controllers', [])
                         }).then(function successCallback(response) {
                             $ionicLoading.hide();
                             console.log(response.data);
-                            $state.go(response.data.redirect_url,{'id':  $stateParams.id}, {relaod: true});
+                            if(get('familynavigate') == 1){
+                                $state.go(response.data.redirect_url,{'id':  $stateParams.id}, {relaod: true});
+                            }else{
+                                $http({
+                                            method: 'GET',
+                                            url: domain + 'doctors/consultation-family-list',
+                                            params: {doctor_id: $scope.doctorId,patient_id: $scope.patientId}
+                                        }).then(function successCallback(response) {
+                                            $scope.cards = response.data.existing_relations;
+                                            
+                                            $scope.select={};
+                                            $scope.select = response.data.relation_master;
+                                            $scope.select.unshift($scope.temp);
+                                            $scope.select.push($scope.temp2);
+
+                                            console.log(response.data);
+                                            console.log($scope.cards);
+                                        });
+                            }
                         }, function errorCallback(e) {
                             console.log(e);
                         });
@@ -3247,6 +3265,7 @@ angular.module('your_app_name.controllers', [])
             
         })
         .controller('PatientCtrl', function ($scope, $http, $stateParams, $ionicModal, $state, $ionicLoading) {
+            store({'familynavigate': 1});
             $scope.allCats = []
             $ionicLoading.show({template: 'Loading..'});
             $scope.patientId = $stateParams.id;
@@ -13335,6 +13354,7 @@ angular.module('your_app_name.controllers', [])
             };
         })
         .controller('DoctorJoinCtrl', function ($ionicLoading, $scope, $rootScope, $http, $compile, $ionicModal, $timeout, $stateParams, $cordovaCamera, $ionicHistory, $ionicPopup, $state, $window, $filter, $ionicScrollDelegate) {
+            store({'familynavigate': 0});
             $ionicLoading.show({template: 'Loading...'});
 //            if (!get('loadedOnce')) {
 //                store({'loadedOnce': 'true'});
@@ -14712,6 +14732,7 @@ angular.module('your_app_name.controllers', [])
             };
             sidetab('#cstab1');
             sidetab('#cstab2');
+
             $scope.pulltab = function (d) {
                 console.log(d);
                 var ww = (jQuery(window).width()) - 40;
