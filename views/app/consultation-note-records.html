@@ -4,6 +4,7 @@
         <span>{{catname}}</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
+        <button ng-click="shareTreatment()" class="button button-icon icon ion-android-share-alt">Share</button>
         <button ng-click="addNew('{{catid}}')" class="button button-icon button-clear icon ion-plus"> Add</button>
     </ion-nav-buttons>
     <ion-content scroll="true" class="bgwhite">
@@ -11,6 +12,7 @@
             pulling-text="Pull to refresh..."
             on-refresh="doRefresh()">
         </ion-refresher>
+        
         
             <!--task -->
           	<td-card ng-repeat="card in cards" id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 30">

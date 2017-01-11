@@ -1,7 +1,7 @@
 <div>
     <div style="padding:2px">
         <div style ="float:left">
-            <a ng-click="shareTreatment()" class="button btn-share"><i class="icon ion-android-share-alt"/></a>
+            <a ng-click="shareTreatment(allCats)" class="button btn-share"><i class="icon ion-android-share-alt"/></a>
         </div>
     </div>    
     <div ng-repeat="cat in allCats" ng-if="$index % 3 == 0" class="row" width="99%">

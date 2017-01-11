@@ -4036,6 +4036,7 @@ angular.module('your_app_name.controllers', [])
             $scope.obsId = [];
             $scope.obsIds = [];
             $scope.diagIds  = [];
+            $scope.catIds = [];
             $scope.sharecheckboxes = {};
             $scope.tabnav['observations'] = 1;
             console.log($scope.noteid);
@@ -4076,7 +4077,7 @@ angular.module('your_app_name.controllers', [])
             }
 
             $scope.noteShare = function(){
-                if(confirm('are you sure you want to share the entire note with the patient?')){
+                if(confirm('Are you sure you want to share the entire note with the patient?')){
                     console.log('share Entire Note button clicked');
                     
                     $scope.data['noteid'] = $scope.noteid;
@@ -4104,12 +4105,11 @@ angular.module('your_app_name.controllers', [])
                 // jQuery('.selectObservations').css('display', 'block');
                 // jQuery('#shareObs').css('display', 'none');
                 // jQuery('#cancelObs').css('display', 'block');
-                if(confirm('are you sure you want to share all observations with the patient?')){
+                if(confirm('Are you sure you want to share all observations with the patient?')){
                     console.log('sharing following observations with the patient');
                     angular.forEach(obj, function(value,key){
                         $scope.obsIds.push(value['id']);
                     });
-                    $scope.data = [];
                     $scope.data['noteid'] = $scope.noteid;
                     $scope.data['rowids'] = $scope.obsIds;
                     $scope.data['type'] = 2;
@@ -4131,12 +4131,11 @@ angular.module('your_app_name.controllers', [])
             };
 
             $scope.shareDiagnosis = function(obj){
-                if(confirm('are you sure you want to share all diagnosis with the patient?')){
+                if(confirm('Are you sure you want to share all diagnosis with the patient?')){
                     console.log('sharing following diagnosis with the patient');
                     angular.forEach(obj, function(value,key){
                         $scope.diagIds.push(value['id']);
                     });
-                    $scope.data = [];
                     $scope.data['noteid'] = $scope.noteid;
                     $scope.data['rowids'] = $scope.diagIds;
                     $scope.data['type'] = 3;
@@ -4162,6 +4161,34 @@ angular.module('your_app_name.controllers', [])
                 jQuery('#shareObs').css('display', 'block');
                 jQuery('#cancelObs').css('display', 'none');
                 $scope.obsIds = [];
+            }
+
+            $scope.shareTreatment = function(obj){
+                if(confirm('Are you sure you want to share all treatments with the patient?')){
+                    console.log('sharing following treatments with the patient');
+                    angular.forEach(obj, function(value,key){
+                        if(value['count'] > 0){
+                            $scope.catIds.push(value['category']);
+                        }
+                    });
+                    $scope.data['noteid'] = $scope.noteid;
+                    $scope.data['categories'] = $scope.catIds;
+                    $scope.data['type'] = 4;
+                    console.log(JSON.stringify($scope.data));
+
+                    $http({
+                        method: 'POST',
+                        url: domain + 'doctors/share-consultation-note-details',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                    },function errorCallback(response){
+                        alert('there was an error encountered');
+                        console.log(response.data.message);
+                        console.log(response.data.error);
+                    });
+
+                }
             }
 
             
@@ -4737,6 +4764,30 @@ angular.module('your_app_name.controllers', [])
                 console.log(val);
                 store({'noteid': $scope.noteid});
                 $state.go('app.record-details', {'id': val}, {reload: true});
+            }
+
+            $scope.shareTreatment = function(){
+                if(confirm('Are you sure you want to share all '+$scope.catname+' records with the patient?')){
+                    console.log('sharing following treatments with the patient');
+                    
+                    $scope.data['noteid'] = $scope.noteid;
+                    $scope.data['categories'] =[$scope.catid];
+                    $scope.data['type'] = 4;
+                    console.log(JSON.stringify($scope.data));
+
+                    $http({
+                        method: 'POST',
+                        url: domain + 'doctors/share-consultation-note-details',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                    },function errorCallback(response){
+                        alert('there was an error encountered');
+                        console.log(response.data.message);
+                        console.log(response.data.error);
+                    });
+
+                }
             }
         })
 
