@@ -48,7 +48,7 @@
                 <my-tab title ="View">
                     <div class="mtabcon" ng-controller="FamilyBackgroundCtrl">
                         <div class="list card post-item greenbox" ng-repeat="card in cards">
-                            <a ng-click="selectedCard(card.id)">
+                            <a> <!-- ng-click="selectedCard(card.id)" -->
                                 <div class="card-content p0">
                                     <div class="row post-heading item item-text-wrap ">
                                         <div class="col col-70">
@@ -59,12 +59,9 @@
                                     <div class="post-content item item-text-wrap p0" >
                                         <p ng-if="card.problems.length == 0"> No problems fed</p>
                                         <div class="row" ng-repeat="problem in card.problems">
-                                            <span>{{problem.problem.problem}}</span>
+                                            <span>{{problem.problem.condition}}</span>
                                         </div>
                                         <div class="post-footer p0">
-                                            <div class="row">
-                                                <div class="col-80 ">Click to add more</div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

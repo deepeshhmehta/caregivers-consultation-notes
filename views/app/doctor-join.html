@@ -21,9 +21,9 @@
         </div>
 
         <div class="crighttab greentab" id="cstab1">
-            <!-- <div class="ctabbtn" ng-click="pulltab('cstab1')">
+            <div class="ctabbtn" ng-click="pulltab('cstab1')">
                 <span class="ion-plus"></span>
-            </div> -->
+            </div>
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
                    
@@ -38,29 +38,18 @@
         </div>
 
         <div class="crighttab greentab" id="cstab2" >
-            <!-- <div class="ctabbtn" ng-click="pulltab('cstab2')" style="top:45px;">
+            <div class="ctabbtn" ng-click="pulltab('cstab2')" style="top:45px;">
                 <span class="ion-eye"></span>
-            </div>  -->
+            </div> 
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
-                    <div class="maintab row">
-                        <select class="cselectn" ng-model="ptab" ng-change="changemaincate(ptab)">
-                            <option value="pbackground" selected>Background</option>
-                            <option value="precords" >Records</option>
-                            <option value="pconsults" >Consults</option>
-
-                        </select>
-                    </div>
+                   
                     <div class="clr"></div><div class="clr"></div>
-                    <div class="sldebxcontent" ng-show="pnotebackground">
-                        <div ng-include src="'views/app/preview/note-background.html'" ></div>                        
+                    <div class="sldebxcontent" ng-show="1">
+                        <div ng-include src="'views/app/consultation-note-details-video.html'" ></div>                
                     </div>
-                    <div class="sldebxcontent" ng-show="precordsView">
-                        <div ng-include src="'views/app/preview/records-view.html'" ></div>                        
-                    </div>
-                    <div class="sldebxcontent" ng-show="pconsultsView">
-                        <div ng-include src="'views/app/preview/consults-view.html'" ></div>                        
-                    </div>
+
+                    
                 </ion-scroll>
             </div>
             <div class="clr"></div>
@@ -129,5 +118,44 @@
     <div class="fixedbar">
     <div class="button btn-add"  ng-click="modal.hide()" ><i class="ion-check"></i> Submit</div>
     </div>
+    </ion-modal-view>
+</script>
+<script id="create-Observation" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar app-top-bar">
+            <h1 class="title">Write an Observation</h1>
+            <div class="button button-clear" ng-click="modal.hide()"><span class="icon ion-close"></span></div>
+        </ion-header-bar>
+        <ion-content>
+            
+                <div class="item item-divider"><span>Observation </span></div> 
+                <label class="item item-input listreq">
+                  <textarea ng-model="data.observation" type = "text" required placeholder="Observation" rows="25" cols="300" style="resize: none;">
+                    
+                  </textarea>
+                </label>
+                <button ng-click="saveObservation()" class="button button-positive button-block">Add</button>
+            
+        </ion-content>
+    </ion-modal-view>
+</script>
+
+<script id="create-diagnosis" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar app-top-bar">
+            <h1 class="title">Write a Diagnosis</h1>
+            <div class="button button-clear" ng-click="modal.hide()"><span class="icon ion-close"></span></div>
+        </ion-header-bar>
+        <ion-content>
+            
+                <div class="item item-divider"><span>Diagnosis </span></div> 
+                <label class="item item-input listreq">
+                  <textarea ng-model="data.diagnosis" type = "text" required placeholder="Diagnosis" rows="25" cols="300" style="resize: none;">
+                    
+                  </textarea>
+                </label>
+                <button ng-click="saveDiagnosis()" class="button button-positive button-block">Add</button>
+            
+        </ion-content>
     </ion-modal-view>
 </script>

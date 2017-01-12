@@ -4,8 +4,17 @@
             <a ng-click="shareDiagnosis(cards)" class="button btn-share"><i class="icon ion-android-share-alt"/></a>
         </div>
         <div style="float:right">
-            <a ng-click="addDiagnosis()" class="button btn-share"><i class="icon ion-ios-plus-outline"/></a>        
+            <a ng-click="addDiagnosis()" class="button btn-share"><i class="icon ion-ios-plus-outline"/></a>
         </div>
+    </div>
+    <div class="hide diagnosisAdd">
+        <div class="item item-divider"><span>Diagnosis </span></div> 
+        <label class="item item-input listreq">
+          <textarea ng-model="data.diagnosis" type = "text" required placeholder="Diagnosis" rows="25" cols="50" style="resize: none;">            
+          </textarea>
+        </label>
+        <button ng-click="saveDiagnosis()" class="button button-positive button-block">Add</button>
+        <button ng-click="cancelAction()" class="button button-delete button-block">Cancel</button>
     </div>
       <div class="clr"></div>
         <div class="list card post-item greenbox" ng-repeat="card in cards">

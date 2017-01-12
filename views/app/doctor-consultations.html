@@ -54,15 +54,23 @@
                                                     <span class="icon ion-eye"></span> View Medicine
                                                 </a>
                                             </div>
-                                            <div class="col txt-center" ng-if="td.todays_note.length > 0">
-                                                <a  class="btn crdview-plus" ng-click="viewNote(td.todays_note[0].id, td.app.id)">
-                                                    <span class="icon ion-eye"></span> View Note
-                                                </a>
+                                            <div ng-if="0">
+                                                <div class="col txt-center" ng-if="td.todays_note.length > 0">
+                                                    <a  class="btn crdview-plus" ng-click="viewNote(td.todays_note[0].id, td.app.id)">
+                                                        <span class="icon ion-eye"></span> View Note
+                                                    </a>
+                                                </div>
+                                                <div class="col txt-center" ng-if="td.todays_note.length == 0">
+                                                    <a ng-click="addConsultationNote(td.app.id, 'act')" class="btn crdview-plus">
+                                                        <span class="icon ion-plus-circled"></span> Note
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div class="col txt-center" ng-if="td.todays_note.length == 0">
-                                                <!-- <a ng-click="addCnote(td.app.id, 'act')" class="btn crdview-plus">
-                                                    <span class="icon ion-plus-circled"></span> Note
-                                                </a> -->
+                                            <div class="col txt-center">
+                                                <a ng-click="addConsultationNote(td.app.id)" class="btn crdview-plus">
+                                                    <span class="icon ion-plus-circled" ng-if="app.todays_note.length == 0" ></span>
+                                                    <span class="icon ion-eye" ng-if="app.todays_note.length > 0"></span>Notes
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="clr"></div>
@@ -126,15 +134,24 @@
                                                     <span class="icon ion-eye"></span> View Medicine
                                                 </a>
                                             </div>
-                                            <div class="col txt-center" ng-if="app.week_note.length > 0">
-                                                <a class="btn crdview-plus" ng-click="viewNote(app.week_note[0].id, app.app.id)">
-                                                    <span class="icon ion-eye"></span>View Note
-                                                </a>
+                                            <div ng-if="0">
+                                                <div class="col txt-center" ng-if="app.week_note.length > 0">
+                                                    <a class="btn crdview-plus" ng-click="viewNote(app.week_note[0].id, app.app.id)">
+                                                        <span class="icon ion-eye"></span>View Note
+                                                    </a>
+                                                </div>
+                                                <div class="col txt-center" ng-if="app.week_note.length == 0">
+                                                    <a ng-click="addConsultationNote(app.app.id, 'act')" class="btn crdview-plus">
+                                                        <span class="icon ion-plus-circled"></span> Note
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div class="col txt-center" ng-if="app.week_note.length == 0">
-                                                <!-- <a ng-click="addCnote(app.app.id, 'act')" class="btn crdview-plus">
-                                                    <span class="icon ion-plus-circled"></span> Note
-                                                </a> -->
+                                            <div class="col txt-center">
+                                                <a ng-click="addConsultationNote(app.app.id)" class="btn crdview-plus">
+                                                    <span class="icon ion-plus-circled" ng-if="app.week_note.length == 0" ></span>
+                                                    <span class="icon ion-eye" ng-if="app.week_note.length > 0"></span>
+                                                    Notes
+                                                </a>
                                             </div>
                                         </div> 
                                         <div class="clr"></div>
@@ -197,15 +214,24 @@
                                                     <span class="icon ion-eye"></span> View Medicine
                                                 </a>
                                             </div>
-                                            <div class="col txt-center" ng-if="app.all_note.length > 0">
-                                                <a class="btn crdview-plus" ng-click="viewNote(app.all_note[0].id, app.app.id)">
-                                                    <span class="icon ion-eye"></span> View Note
-                                                </a>
+                                            <div ng-if="0">
+                                                <div class="col txt-center" ng-if="app.all_note.length > 0">
+                                                    <a class="btn crdview-plus" ng-click="viewNote(app.all_note[0].id, app.app.id)">
+                                                        <span class="icon ion-eye"></span> View Note
+                                                    </a>
+                                                </div>
+                                                <div class="col txt-center" ng-if="app.all_note.length == 0">
+                                                    <a ng-click="addConsultationNote(app.app.id, 'act')" class="btn crdview-plus">
+                                                        <span class="icon ion-plus-circled"></span> Note
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div class="col txt-center" ng-if="app.all_note.length == 0">
-                                                <!-- <a ng-click="addCnote(app.app.id, 'act')" class="btn crdview-plus">
-                                                    <span class="icon ion-plus-circled"></span> Note
-                                                </a> -->
+                                            <div class="col txt-center">
+                                                <a ng-click="addConsultationNote(app.app.id)" class="btn crdview-plus">
+                                                    <span class="icon ion-plus-circled" ng-if="app.all_note.length == 0" ></span>
+                                                    <span class="icon ion-eye" ng-if="app.all_note.length > 0"></span> 
+                                                    Notes
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="clr"></div>

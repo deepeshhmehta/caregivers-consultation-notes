@@ -4,184 +4,74 @@
         .card { margin:5px 5px; }
     </style>
     <my-tabs class="themetabs">
-        <my-tab title="Created by you ({{records.length}})" ng-click="subpage('createdbyu')"> 
+        <my-tab title="Created by you ({{totalCreateByYou}})" ng-click="subpage('createdbyu')"> 
             <!--  ng-click="subpage('createdbyu')"  -->
             <div class="tabcontainer" >
                 <p ng-if="records.length == 0">No record(s) found.</p>
             </div> 
 
-            <div ng-repeat="cat in allCats" ng-if="$index % 3 == 0" class="row" width="99%">
+            <div ng-repeat="cat in allCatsCreateByYou" ng-if="$index % 3 == 0" class="row" width="99%">
                 <div class="col greenbox card">
                     <div class="post-heading">
-                        <a ng-click="gotopage(allCats[$index].url,allCats[$index].category)">
-                            <h2 class="text-center">{{allCats[$index].name}}</h2>
-                            <p class="text-center count">{{allCats[$index].count}} </p>
+                        <a ng-click="gotopage(allCatsCreateByYou[$index].url,allCatsCreateByYou[$index].category)">
+                            <h2 class="text-center">{{allCatsCreateByYou[$index].name}}</h2>
+                            <p class="text-center count">{{allCatsCreateByYou[$index].count}} </p>
                         </a>
                     </div>
                 </div>
-                <div class="col greenbox card" ng-if="allCats.length > ($index + 1)">
+                <div class="col greenbox card" ng-if="allCatsCreateByYou.length > ($index + 1)">
                     <div class="post-heading">
-                        <a ng-click="gotopage(allCats[$index + 1].url,allCats[$index + 1].category)">
-                            <h2 class="text-center">{{allCats[$index + 1].name}}</h2>
-                            <p class="text-center count">{{allCats[$index + 1].count}} </p>
+                        <a ng-click="gotopage(allCatsCreateByYou[$index + 1].url,allCatsCreateByYou[$index + 1].category)">
+                            <h2 class="text-center">{{allCatsCreateByYou[$index + 1].name}}</h2>
+                            <p class="text-center count">{{allCatsCreateByYou[$index + 1].count}} </p>
                         </a>
                     </div>
                 </div>
-                <div class="col greenbox card"  ng-if="allCats.length > ($index + 2)">
+                <div class="col greenbox card"  ng-if="allCatsCreateByYou.length > ($index + 2)">
                     <div class="post-heading">
-                        <a ng-click="gotopage(allCats[$index + 2].url,allCats[$index + 2].category)">
-                            <h2 class="text-center">{{allCats[$index + 2].name}}</h2>
-                            <p class="text-center count">{{allCats[$index + 2].count}} </p>
+                        <a ng-click="gotopage(allCatsCreateByYou[$index + 2].url,allCatsCreateByYou[$index + 2].category)">
+                            <h2 class="text-center">{{allCatsCreateByYou[$index + 2].name}}</h2>
+                            <p class="text-center count">{{allCatsCreateByYou[$index + 2].count}} </p>
                         </a>
                     </div>
                 </div>        
-            </div>
-
-               
+            </div>               
         </my-tab>
-        <my-tab title="Shared with you ({{sharedRecords.length}})" ng-click="subpage('sharedwithyou')"> 
-            <!-- ng-click="subpage('sharedwithyou')" -->
-            <div class="tabcontainer">
-                <p ng-if="sharedRecords.length == 0">No record(s) found.</p>
-                <div class="list card post-item greenbox" ng-repeat="srec in sharedRecords track by $index" ng-if="sharedRecords.length > 0">
-                    <div class="card-content p0">
-                        <div class="row post-heading item item-text-wrap ">
-                            <div class="col col-70">
-                                <h2 class="post-title">{{srec.categories.category}}</h2>
-                            </div>
-                            <div class="col col-30 txt-right" ng-if="srec.attachments.length > '0' && srec.category != '8'">
-                                <div class="col-md-25 text-right" ng-click="showAttach(srec.attachments)">
-                                    <span class="ico"><i class="ion-paperclip"></i> ({{srec.attachments.length}})</span>
-                                </div>
-                                <div class="col col-25 txt-right" ng-if="srec.srecord_metadata.length > 3">
-                                    <div class="infomore" ng-click="infomore(srec.id + 'created')">
-                                        <span class="infb" id="arr{{srec.id}}created"> More</span> <i class="ion-android-arrow-forward"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col col-30 txt-right" ng-if="srec.attachments.length == '0' && srec.category != '8'">
-                                <div class="txt-right" ng-if="srec.record_metadata.length > 3">
-                                    <div class="infomore" ng-click="infomore(srec.id + 'created')">
-                                        <span class="infb" id="arr{{srec.id}}created"> More</span> <i class="ion-android-arrow-forward"></i>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col col-30 txt-right" ng-if="srec.category == '8' && srec.appointment_id != '0'">
-                                <div class="row">
-                                    <div class="col-20 text-right" ng-if="srec.attachments.length > '0'" ng-click="showAttach(srec.attachments)">
-                                        <span class="ico"><i class="ion-paperclip"></i> ({{srec.attachments.length}})</span>
-                                    </div>
-                                    <div class="col-80 text-right" ng-if="srec.attachments.length > '0'" >
-                                        <span class="btn crdview-plus">View Note</span> <br/>
-                                        <div class="infomore mt10" ng-click="infomore(srec.id + 'created')" ng-if="srec.record_metadata.length > 3">
-                                            <span class="infb" id="arr{{srec.id}}created"> More</span> <i class="ion-android-arrow-forward"></i>
-                                        </div>
-                                    </div>
-                                </div>
+        
 
-                            </div>
-                        </div>
-                        <div class="post-content item item-text-wrap p0">
-                            <div class="row" ng-repeat="sdetail in srec.record_metadata| limitTo: recsLimit[$index]">
-                                <div class="col"><strong ng-if="sdetail.value != '' && sdetail.fields.name != 'no-of-frequency-1' && sdetail.fields.name != 'no-of-frequency' && sdetail.fields.name != 'no-of-times'">{{sdetail.fields.field}}</strong></div>
-                                <div class="col">: <span ng-if="sdetail.fields.field == 'Prescribed By' || sdetail.fields.field == 'Measured By' || sdetail.fields.field == 'Doctor' || sdetail.fields.field == 'Referred By' || sdetail.fields.field == 'Performed By' || sdetail.fields.field == 'Consultant'">
-                                        {{sharedoctors[$parent.$parent.$index]}} 
-                                    </span>
-                                    <span ng-if="sdetail.fields.field == 'Related Problem'" >
-                                        {{shareproblems[$parent.$parent.$index].value}}
-                                    </span>
-                                    <span ng-if="sdetail.fields.field == 'Patient'" >
-                                        {{sharedpatient[$parent.$parent.$index].fname}} {{sharedpatient[$parent.$parent.$index].lname}}
-                                    </span>
-                                    <span ng-if="sdetail.fields.field == 'Case Id'" >
-                                        {{sharedcases[$parent.$parent.$parent.$index].value}}
-                                    </span>
-                                    <span ng-if="srec.category == 30">
-                                        <span ng-if="sdetail.fields.field == 'Frequency'" >
-                                            <span ng-if="sdetail.value == 'Repeat'">Once every {{repeatNo[$parent.$parent.$parent.$parent.$index]}} {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
-                                            <span ng-if="sdetail.value != 'Repeat'">{{sdetail.value}}</span>
-                                        </span>
-                                    </span>
-                                    <span ng-if="sdetail.fields.field == 'No of days'">
-                                        <div class="dietdays" >
-                                            <div class="button button-small inbtn {{dd.isEmptyObj? 'filled-data':'filldata'}}" ng-repeat="dd in createdietRec[$parent.$parent.$parent.$index]" ng-controller="mealDetailsCtrl" ng-click="dayDetailsDisp($parent.$parent.$parent.$parent.$index, $index)">
-                                                <!--<span class="icon ion-plus-circled"></span>--> Day {{$index + 1}}</div>
-                                        </div>
-                                    </span>
-                                    <span ng-if="sdetail.fields.field_type != '5' && sdetail.fields.name != 'no-of-frequency-1' && sdetail.fields.name != 'no-of-frequency' && sdetail.fields.name != 'no-of-times' && sdetail.fields.field != 'Frequency' && sdetail.fields.field != 'No of days' && sdetail.fields.field != 'Attachments' && sdetail.fields.field != 'Patient' && sdetail.fields.field != 'Case Id' && sdetail.fields.field != 'Doctor' && sdetail.fields.field != 'Prescribed By' && sdetail.fields.field != 'Measured By' && sdetail.fields.field != 'Referred By' && sdetail.fields.field != 'Performed By' && sdetail.fields.field != 'Consultant' && sdetail.fields.field != 'Related Problem'">
-                                        <span ng-if="sdetail.fields.field_type == 8 && sdetail.value != ''"><span ng-if="sdetail.field_id == 'consultation-date'" >{{sdetail.value}}</span><span ng-if="sdetail.field_id != 'consultation-date'" >{{sdetail.value|dateFormat4}}</span></span>
-                                        <span ng-if="sdetail.fields.field_type == 12 && sdetail.value != ''">{{sdetail.value|time1}}</span>
-                                        <span ng-if="sdetail.fields.field_type != 8 && sdetail.fields.field_type != 12 && sdetail.value != ''">{{sdetail.value}}</span>
-                                    </span>
-                                    <span ng-if="sdetail.fields.field_type == '5'">
-                                        <span ng-repeat="attach in srec.attachments" >
-                                            <span ng-init="selData = (attach.orginial_name).split('.')">
-                                                <a class="filelink" ng-click="showRecAttach(attach.host, attach.attachment_path, attach.orginial_name)" >
-                                                    <span class="ico"><i class="ion-paperclip"></i></span> ({{$index + 1}})
-                                                </a>
-                                            </span>
-                                        </span>
-                                    </span></div>
-                            </div>                            
-                            <div class="infomore-div" id="{{srec.id}}created">
-                                <div class="row" ng-repeat="sdetail in srec.record_metadata" ng-if="$index >= 4">
-                                    <div class="col"><strong ng-if="sdetail.value != '' && sdetail.fields.name != 'no-of-frequency-1' && sdetail.fields.name != 'no-of-frequency' && sdetail.fields.name != 'no-of-times'">{{sdetail.fields.field}}</strong></div>
-                                    <div class="col">: <span ng-if="sdetail.fields.field == 'Prescribed By' || sdetail.fields.field == 'Measured By' || sdetail.fields.field == 'Doctor' || sdetail.fields.field == 'Referred By' || sdetail.fields.field == 'Performed By' || sdetail.fields.field == 'Consultant'">
-                                            {{shareddoctors[$parent.$parent.$parent.$index]}}
-                                        </span>
-                                        <span ng-if="sdetail.fields.field == 'Related Problem'" >
-                                            {{sharedproblems[$parent.$parent.$parent.$index].value}}
-                                        </span>
-                                        <span ng-if="sdetail.fields.field == 'Patient'" >
-                                            {{sharedpatient[$parent.$parent.$parent.$index].fname}} {{sharedpatient[$parent.$parent.$parent.$index].lname}}
-                                        </span>
-                                        <span ng-if="sdetail.fields.field == 'Case Id'" >
-                                            {{sharedcases[$parent.$parent.$parent.$index].value}}
-                                        </span>
-                                        <span ng-if="srec.category == 30">
-                                            <span ng-if="sdetail.fields.field == 'Frequency'" >
-                                                <span ng-if="sdetail.value == 'Repeat'">Once every {{repeatNo[$parent.$parent.$parent.$parent.$index]}} {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
-                                                <span ng-if="sdetail.value != 'Repeat'">{{sdetail.value}}</span>
-                                            </span>
-                                        </span>
-                                        <span ng-if="sdetail.fields.field == 'No of days'">
-                                            <div class="dietdays" >
-                                                <div class="button button-small inbtn {{dd.isEmptyObj? 'filled-data':'filldata'}}" ng-repeat="dd in createdietRec[$parent.$parent.$parent.$index]" ng-controller="mealDetailsCtrl" ng-click="dayDetailsDisp($parent.$parent.$parent.$parent.$index, $index)">
-                                                    <!--<span class="icon ion-plus-circled"></span>--> Day {{$index + 1}}</div>
-                                            </div>
-                                        </span>
-                                        <span ng-if="sdetail.fields.field_type != '5' && sdetail.fields.name != 'no-of-frequency-1' && sdetail.fields.name != 'no-of-frequency' && sdetail.fields.name != 'no-of-times' && sdetail.fields.field != 'Frequency' && sdetail.fields.field != 'No of days' && sdetail.fields.field != 'Attachments' && sdetail.fields.field != 'Patient' && sdetail.fields.field != 'Case Id' && sdetail.fields.field != 'Doctor' && sdetail.fields.field != 'Prescribed By' && sdetail.fields.field != 'Measured By' && sdetail.fields.field != 'Referred By' && sdetail.fields.field != 'Performed By' && sdetail.fields.field != 'Consultant' && sdetail.fields.field != 'Related Problem'">
-                                            <span ng-if="sdetail.fields.field_type == 8 && sdetail.value != ''"><span ng-if="sdetail.field_id == 'consultation-date'" >{{sdetail.value}}</span><span ng-if="sdetail.field_id != 'consultation-date'" >{{sdetail.value|dateFormat4}}</span></span>
-                                            <span ng-if="sdetail.fields.field_type == 12 && sdetail.value != ''">{{sdetail.value|time1}}</span>
-                                            <span ng-if="sdetail.fields.field_type != 8 && sdetail.fields.field_type != 12 && sdetail.value != ''">{{sdetail.value}}</span>
-                                        </span>
-                                        <span ng-if="sdetail.fields.field_type == '5'">
-                                            <span ng-repeat="attach in srec.attachments" >
-                                                <span ng-init="selData = (attach.orginial_name).split('.')">
-                                                    <a class="filelink" ng-click="showRecAttach(attach.host, attach.attachment_path, attach.orginial_name)" >
-                                                        <span class="ico"><i class="ion-paperclip"></i></span> ({{$index + 1}})
-                                                    </a>
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-footer p0">
-                                <div class="row">
-                                    <div class="col-md-12 ">Created {{srec.created_at| datetime3 }} by {{userId==createdbyShared[$index].id? 'You': createdbyShared[$index].fname}}</div>
-                                </div>
-                            </div>
-                        </div>
+        <my-tab title="Shared with you ({{totalSharedWithYou}})" ng-click="subpage('createdbyu')"> 
+            <!--  ng-click="subpage('createdbyu')"  -->
+            <div class="tabcontainer" >
+                <p ng-if="records.length == 0">No record(s) found.</p>
+            </div> 
+
+            <div ng-repeat="cat in allCatsSharedWithYou" ng-if="$index % 3 == 0" class="row" width="99%">
+                <div class="col greenbox card">
+                    <div class="post-heading">
+                        <a ng-click="gotopage(allCatsSharedWithYou[$index].url,allCatsSharedWithYou[$index].category)">
+                            <h2 class="text-center">{{allCatsSharedWithYou[$index].name}}</h2>
+                            <p class="text-center count">{{allCatsSharedWithYou[$index].count}} </p>
+                        </a>
                     </div>
                 </div>
-                <!--                <div class="card-vnote" ng-show="cardvnote">
-                                    <div class="clearfix text-center mt20">
-                                        <div  class="btn btn-danger" ng-click="closecardviewnote()"> &nbsp; Close  &nbsp; </div></div>
-                                    <div ng-include src="'../resources/views/Frontend/pages/doctrs/overview/viewnote.html'" ></div>
-                                </div>-->
-            </div>
+                <div class="col greenbox card" ng-if="allCatsSharedWithYou.length > ($index + 1)">
+                    <div class="post-heading">
+                        <a ng-click="gotopage(allCatsSharedWithYou[$index + 1].url,allCatsSharedWithYou[$index + 1].category)">
+                            <h2 class="text-center">{{allCatsSharedWithYou[$index + 1].name}}</h2>
+                            <p class="text-center count">{{allCatsSharedWithYou[$index + 1].count}} </p>
+                        </a>
+                    </div>
+                </div>
+                <div class="col greenbox card"  ng-if="allCatsSharedWithYou.length > ($index + 2)">
+                    <div class="post-heading">
+                        <a ng-click="gotopage(allCatsSharedWithYou[$index + 2].url,allCatsSharedWithYou[$index + 2].category)">
+                            <h2 class="text-center">{{allCatsSharedWithYou[$index + 2].name}}</h2>
+                            <p class="text-center count">{{allCatsSharedWithYou[$index + 2].count}} </p>
+                        </a>
+                    </div>
+                </div>        
+            </div>               
         </my-tab>
     </my-tabs>
 </div>
