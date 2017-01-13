@@ -1,7 +1,7 @@
 <ion-view class="records-view">
     <ion-nav-title>
         <span>{{category[0].category}}</span>
-        <!---<button class="button" ng-click="print()">Print</button>--->
+        <!--<button class="button" ng-click="print()">Print</button>-->
     </ion-nav-title>
     <div class="item item-divider mtop44" style="font-size: 18px; min-height: 45px; text-align:center;">
         <span  ng-if="apkLanguage == 'english'">  Records- {{createdby.length}}</span>
@@ -13,8 +13,8 @@
         <div class="list recordview" style="margin-top: 50px;" >
             <div class="mt15" ng-if="records.length == 0"> <p class="txt-center" >No records here. Add now to get started.</p></div>
             <div class="posts-list"  ng-repeat="rec in records track by $index" ng-if="records.length > 0">
-                <div  class="list card post-item"> <!---- ui-sref="{{catId == '8'?  app.preview-note({'id' : rec.id, 'appId': 1, 'res' : 'json'}):app.record-details({'id' : rec.id, 'shared': shared, 'res' : 'json'})}}"--->
-<!--                    <a ng-click="viewDetails(rec.id, rec.appointment_id, rec.user_id, rec.for, rec.doctor_id)" class="post-content item item-text-wrap">-->
+                <div  class="list card post-item"> <!-- ui-sref="{{catId == '8'?  app.preview-note({'id' : rec.id, 'appId': 1, 'res' : 'json'}):app.record-details({'id' : rec.id, 'shared': shared, 'res' : 'json'})}}"-->
+                <!--<a ng-click="viewDetails(rec.id, rec.appointment_id, rec.user_id, rec.for, rec.doctor_id)" class="post-content item item-text-wrap">-->
                         <div class="item item-divider mt15 ng-binding" >{{rec.share_with.fname}} {{rec.share_with.lname}}</div>
                         <div class="row pr-b10">
                             <div class="col" ng-repeat="detail in rec.record_metadata| limitTo: limit"> 
@@ -69,7 +69,7 @@
                         </div>
                         <div class="attachcard" ng-if="rec.attachments.length != 0">
                             <i class="ion-paperclip"></i></div>
-<!--                    </a>-->
+                    <!--</a>-->
 
                     <div class="row recordrow" >
                         <div class="col radiorecord" style="display: none">

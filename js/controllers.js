@@ -1699,6 +1699,38 @@ angular.module('your_app_name.controllers', [])
                 $scope.modal.hide();
             };
         })
+        .controller('mealDetails2Ctrl', function ($scope, $ionicModal) {
+            
+            $ionicModal.fromTemplateUrl('mealdispdetails', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+                $scope.daymodal2 = function(dd){
+                    console.log(dd);
+                }
+                $scope.daymodal = function (day,parent) {
+                    console.log(day);
+                    console.log(parent);
+                    $scope.dietPlanDetails = [];
+                    $scope.dietData = $scope.cards['diet-details'][parent][day]['data'];
+                    console.log($scope.dietData);
+                    $scope.diet = $scope.cards['diet-details'][parent][day]['data'];
+                    console.log('Day ' + day);
+                    $scope.Mealday = (day + 1);
+                    var i, j, temparray, chunk = 4;
+                    for (i = 0, j = $scope.diet.length; i < j; i += chunk) {
+                        $scope.dietPlanDetails.push($scope.diet.slice(i, i + chunk));
+                    }
+                    console.log($scope.dietPlanDetails);
+                    $scope.modal.show();
+                };
+            });
+            $scope.submitmodal = function () {
+                //console.log($scope.catIds);
+                $scope.modal.hide();
+            };
+        })
+
         .controller('shareModalCtrl', function ($scope, $http, $state, $stateParams, $timeout, $ionicModal, $rootScope, $sce, $ionicLoading) {
             //Show share model
             $ionicModal.fromTemplateUrl('share', {
@@ -3315,7 +3347,7 @@ angular.module('your_app_name.controllers', [])
                         }).then(function successCallback(response) {
                             console.log(response);
                             $scope.modal.hide();
-                            store({'noteid': response.data});
+                            store({'noteid': response.data.noteid});
                             $state.go('app.consultation-note-details',{appId:'0'}, {relaod: true});
                         })
             }
@@ -4398,6 +4430,7 @@ angular.module('your_app_name.controllers', [])
                         alert('some field is missing');
                     });
             }
+            
             $scope.doRefresh();
         })
         
@@ -4492,6 +4525,19 @@ angular.module('your_app_name.controllers', [])
 
         .controller('ConsultationsNotesTreatmentViewVideoCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
             console.log('treatmentview');
+            $timeout(function(){
+                    $scope.noteid = get('noteid');
+
+                    $http({
+                                method: 'GET',
+                                url: domain + 'doctors/consultation-note-treatment',
+                                params: {noteid: $scope.noteid}
+                            }).then(function successCallback(response) {
+                                $scope.allCats = response.data;
+                                console.log($scope.options);
+                            });
+                },2000);
+            $scope.noteid = get('noteid');
 
             $http({
                         method: 'GET',
@@ -4501,6 +4547,7 @@ angular.module('your_app_name.controllers', [])
                         $scope.allCats = response.data;
                         console.log($scope.options);
                     });
+            
             $scope.gotopage = function(val, catid, catname){
                 
                 $scope.catid = catid;
@@ -4512,11 +4559,13 @@ angular.module('your_app_name.controllers', [])
                 console.log($scope.catid);
                 
                 $scope.doRefresh();
-                // jQuery('.RecordsView').show('slow');
+                jQuery('.RecordsView').show('slow');
+                jQuery('.allRecords').hide('slow');
             }
 
             $scope.close = function(){
-                jQuery('.RecordsView').hide('slow');   
+                jQuery('.RecordsView').hide('slow');
+                jQuery('.allRecords').show('slow');   
             }
 
             $scope.doRefresh = function(){
@@ -4614,9 +4663,8 @@ angular.module('your_app_name.controllers', [])
         })
 
         .controller('ConsultationsNotesDiagnosisViewVideoCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
-            $scope.noteid = get('noteId');
+            
             $scope.data = {};
-            $scope.data['noteid'] = $scope.noteid;
 
             $scope.addDiagnosis = function(){
                 jQuery('.diagnosisAdd').show('slow');                
@@ -4662,7 +4710,11 @@ angular.module('your_app_name.controllers', [])
                 $scope.data['diagnosis'] = "";
             }
 
-            $scope.doRefresh();
+            $timeout(function(){
+                $scope.noteid = get('noteid');
+                $scope.data['noteid'] = $scope.noteid;
+                $scope.doRefresh();
+            },2000);
         })  
 
         .controller('ConsultationsNotesObservationViewCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
@@ -4710,10 +4762,8 @@ angular.module('your_app_name.controllers', [])
         })
 
         .controller('ConsultationsNotesObservationViewVideoCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
-           
-            $scope.noteid = get('noteId');
             $scope.data = {};
-            $scope.data['noteid'] = $scope.noteid;
+
             $scope.doRefresh = function(){
                 $http({
                         method: 'GET',
@@ -4752,7 +4802,11 @@ angular.module('your_app_name.controllers', [])
                     });
             }
 
-            $scope.doRefresh();            
+            $timeout(function(){
+                $scope.noteid = get('noteid');
+                $scope.data['noteid'] = $scope.noteid;
+                $scope.doRefresh();
+            },2000);
         })
 
         .controller('ConsultationsNotesObservationsCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
@@ -10611,8 +10665,8 @@ angular.module('your_app_name.controllers', [])
                             url: domain + 'doctors/createnewnote-check-if-existing',
                             params: {doctorid: $scope.userId, patientid: $scope.patientId,appointment_id: appointmentid},
                         }).then(function successCallback(response) {
-                            console.log(response.data);
-                            store({noteId: response.data}); //noteid
+                            //console.log(response.data);
+                            store({noteId: response.data.noteid}); //noteid
                             $state.go('app.consultation-note-details', {}, {reload: true});
                         });
             }
@@ -10984,8 +11038,8 @@ angular.module('your_app_name.controllers', [])
                             url: domain + 'doctors/createnewnote-check-if-existing',
                             params: {doctorid: $scope.userId, patientid: $scope.patientId,appointment_id: appointmentid},
                         }).then(function successCallback(response) {
-                            console.log(response.data);
-                            store({noteId: response.data}); //noteid
+                            //console.log(response.data);
+                            store({noteId: response.data.noteid}); //noteid
                             $state.go('app.consultation-note-details', {}, {reload: true});
                         });
             }
@@ -13573,7 +13627,108 @@ angular.module('your_app_name.controllers', [])
                 }
             };
         })
+        .controller('expandAccordianRecordsCtrl',function($ionicLoading, $scope, $rootScope, $http, $compile, $ionicModal, $timeout, $stateParams, $cordovaCamera, $ionicHistory, $ionicPopup, $state, $window, $filter, $ionicScrollDelegate){
+            $scope.shared = 0;
+            $scope.expandAccordian = function(url,catid,share){
+                // $scope.doRefresh(catid,share);
+                // console.log('dorefresh complete');
+                jQuery('.RecordsView').show('slow');
+                jQuery('.allRecords').hide('slow');
+            }
+            $scope.doRefresh = function (catid,share) {
+                $http({
+                    method: 'GET',
+                    url: domain + 'records/get-records-details',
+                    params: {id: catid, userId: get('id'), patientId: $scope.patientId, interface: get('interface_id'), shared: share}
+                }).then(function successCallback(response) {
+                    console.log(response.data);
+                    $scope.records = response.data.records;
+                    if ($scope.records.length != 0) {
+                        if ($scope.records[0].record_metadata.length == 6) {
+                            $scope.limit = 3; //$scope.records[0].record_metadata.length;
+                        }
+                        angular.forEach($scope.records, function (value, key) {
+                            //console.log(key);
+                            angular.forEach(value.record_metadata, function (val, k) {
+                                console.log();
+                                if ($scope.catId == 30) {
+                                    if (val.field_id == 'no-of-frequency') {
+                                        $scope.repeatFreq[key] = val.value;
+                                    }
+                                    if (val.field_id == 'no-of-times') {
+                                        $scope.repeatNo[key] = val.value;
+                                    }
+                                }
+                                if ($scope.catId == 3) {
+                                    if (val.field_id == 'no-of-frequency-1') {
+                                        $scope.repeatFreq[key] = val.value;
+                                    }
+                                }
+                            });
+                        });
+                    }
+                    $scope.createdby = response.data.createdby;
+                    $scope.category = response.data.category;
+                    $scope.doctors = response.data.doctors;
+                    $scope.patient = response.data.patient;
+                    $scope.problems = response.data.problems;
+                    $scope.doctrs = response.data.shareDoctrs;
+                    $scope.langtext = response.data.langtext;
+                    $scope.language = response.data.lang.language;
+                    
+                }, function errorCallback(response) {
+                    
+                });
+            }
+            $scope.closeRecView = function(){
+                console.log('closerec called');
+                jQuery('.RecordsView').hide('slow');
+                jQuery('.allRecords').show('slow');
+            }
+        })
         .controller('DoctorJoinCtrl', function ($ionicLoading, $scope, $rootScope, $http, $compile, $ionicModal, $timeout, $stateParams, $cordovaCamera, $ionicHistory, $ionicPopup, $state, $window, $filter, $ionicScrollDelegate) {
+            $scope.totalCreateByYou = 0;
+            $scope.totalSharedWithYou = 0;
+            $http({
+                        method: 'GET',
+                        url: domain + 'doctors/createnewnote-check-if-existing',
+                        params: {doctorid: get('id'), patientid: 0,appointment_id: $stateParams.id},
+                    }).then(function successCallback(response) {
+                        //console.log(response.data.noteid);
+                        $scope.noteid = response.data.noteid; //noteid
+                        $scope.patientId = response.data.patientid;
+                        store({'noteid':$scope.noteid});
+                        console.log('note id set by doctor join: ' , $scope.noteid);
+                        $http({
+                            method: 'GET',
+                            url: domain + 'doctors/get-record-count-create-by-you',
+                            params: {doctorId: $scope.userId, patientId: $scope.patientId}
+                        }).then(function successCallback(response) {
+                            $scope.allCatsCreateByYou = response.data;
+                            angular.forEach($scope.allCatsCreateByYou, function (value, key) {
+                                $scope.totalCreateByYou += value['count'];
+                            })
+                            console.log($scope.allCatsCreateByYou);
+                        })
+
+                        //shared with you
+                         $http({
+                            method: 'GET',
+                            url: domain + 'doctors/get-record-count-shared-with-you',
+                            params: {doctorId: $scope.userId, patientId: $scope.patientId}
+                        }).then(function successCallback(response) {
+                            $scope.allCatsSharedWithYou = response.data;
+                            angular.forEach($scope.allCatsSharedWithYou, function (value, key) {
+                                $scope.totalSharedWithYou += value['count'];
+                            })
+                            console.log($scope.allCatsSharedWithYou);
+                        })
+                    });
+
+            //create by you
+            
+
+
             store({'familynavigate': 0});
             $ionicLoading.show({template: 'Loading...'});
 //            if (!get('loadedOnce')) {
@@ -14952,6 +15107,7 @@ angular.module('your_app_name.controllers', [])
             };
             sidetab('#cstab1');
             sidetab('#cstab2');
+            sidetab('#cstab3');
 
             $scope.pulltab = function (d) {
                 console.log(d);

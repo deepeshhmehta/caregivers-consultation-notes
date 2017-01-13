@@ -46,7 +46,25 @@
                    
                     <div class="clr"></div><div class="clr"></div>
                     <div class="sldebxcontent" ng-show="1">
-                        <div ng-include src="'views/app/consultation-note-details-video.html'" ></div>                
+                        <div ng-include src="'views/app/consultation-note-details-video.html'" ></div>
+                    </div>
+
+                    
+                </ion-scroll>
+            </div>
+            <div class="clr"></div>
+        </div>
+
+        <div class="crighttab greentab" id="cstab3" >
+            <div class="ctabbtn" ng-click="pulltab('cstab3')" style="top:90px;">
+                <span class="ion-eye"></span>
+            </div> 
+            <div class="sidetabcontent">
+                <ion-scroll direction="y" class="theroot"> 
+                   
+                    <div class="clr"></div><div class="clr"></div>
+                    <div class="sldebxcontent" ng-show="1">
+                        <div ng-include src="'views/app/patients/records-view-video.html'" ></div>                
                     </div>
 
                     
@@ -55,6 +73,8 @@
             <div class="clr"></div>
         </div>
     </ion-content>
+
+    <!-- mute show/hide  -->
     <div class="sticyfooter joinfooter">
         <div class="tabs tabs-icon-top">
             <div class="tab-item muteMic"  onclick="classtoggle(this)">
@@ -157,5 +177,25 @@
                 <button ng-click="saveDiagnosis()" class="button button-positive button-block">Add</button>
             
         </ion-content>
+    </ion-modal-view>
+</script>
+<script id="mealdispdetails" type="text/ng-template">
+    <ion-modal-view>
+    <ion-header-bar class="bar app-top-bar">
+    <h1 class="modalhead txt-center">Meal Details - {{Mealday}}</h1>
+    <button class="button button-clear pull-right" ng-click="submitmodal()">Cancel</button>       
+    </ion-header-bar>
+    <ion-content>
+    <div ng-if="dietPlanDetails.length == 0"><p class="text-center">No data added</p></div>
+    <div ng-repeat="diet in dietPlanDetails">
+    <div class="item item-divider mt15">Meal {{$index+1}}</div>
+    <div ng-repeat="meal in diet" ng-if="meal.fields.name == 'meal-1' || meal.fields.name == 'value'">
+    <div class="row" >
+    <div class="col" ng-if="meal.fields.field == 'Time' && meal.value != '' && meal.value != '00:00:00'">{{meal.value|timeN}}</div>
+    <div class="col" ng-if="meal.fields.field != 'Time'">{{meal.value}}</div>
+    </div>
+    </div>
+    </div>  
+    </ion-content>
     </ion-modal-view>
 </script>
