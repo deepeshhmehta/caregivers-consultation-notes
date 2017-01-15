@@ -1705,9 +1705,22 @@ angular.module('your_app_name.controllers', [])
                 scope: $scope
             }).then(function (modal) {
                 $scope.modal = modal;
-                $scope.daymodal2 = function(dd){
-                    console.log(dd);
-                }
+                $scope.daymodal2 = function(day,parent) {
+                    console.log(day);
+                    console.log(parent);
+                    $scope.dietPlanDetails = [];
+                    $scope.dietData = $scope.cardsViewRecords['diet-details'][parent][day]['data'];
+                    console.log($scope.dietData);
+                    $scope.diet = $scope.cardsViewRecords['diet-details'][parent][day]['data'];
+                    console.log('Day ' + day);
+                    $scope.Mealday = (day + 1);
+                    var i, j, temparray, chunk = 4;
+                    for (i = 0, j = $scope.diet.length; i < j; i += chunk) {
+                        $scope.dietPlanDetails.push($scope.diet.slice(i, i + chunk));
+                    }
+                    console.log($scope.dietPlanDetails);
+                    $scope.modal.show();
+                };
                 $scope.daymodal = function (day,parent) {
                     console.log(day);
                     console.log(parent);
@@ -13629,54 +13642,61 @@ angular.module('your_app_name.controllers', [])
         })
         .controller('expandAccordianRecordsCtrl',function($ionicLoading, $scope, $rootScope, $http, $compile, $ionicModal, $timeout, $stateParams, $cordovaCamera, $ionicHistory, $ionicPopup, $state, $window, $filter, $ionicScrollDelegate){
             $scope.shared = 0;
-            $scope.expandAccordian = function(url,catid,share){
-                // $scope.doRefresh(catid,share);
+            $scope.expandAccordian = function(url,catid,createOrShare){
+                $scope.catid = catid;
+                 $scope.doRefresha(catid,createOrShare);
                 // console.log('dorefresh complete');
                 jQuery('.RecordsView').show('slow');
                 jQuery('.allRecords').hide('slow');
             }
-            $scope.doRefresh = function (catid,share) {
+            $scope.doRefresha = function (catid,share) {
                 $http({
                     method: 'GET',
-                    url: domain + 'records/get-records-details',
-                    params: {id: catid, userId: get('id'), patientId: $scope.patientId, interface: get('interface_id'), shared: share}
+                    url: domain + 'doctors/get-records-details-within-video',
+                    params: {catid: catid, doctorId: get('id'), patientId: $scope.patientId, interface: get('interface_id'), sharedOrCreated: share}
                 }).then(function successCallback(response) {
-                    console.log(response.data);
-                    $scope.records = response.data.records;
-                    if ($scope.records.length != 0) {
-                        if ($scope.records[0].record_metadata.length == 6) {
-                            $scope.limit = 3; //$scope.records[0].record_metadata.length;
-                        }
-                        angular.forEach($scope.records, function (value, key) {
-                            //console.log(key);
-                            angular.forEach(value.record_metadata, function (val, k) {
-                                console.log();
-                                if ($scope.catId == 30) {
-                                    if (val.field_id == 'no-of-frequency') {
-                                        $scope.repeatFreq[key] = val.value;
-                                    }
-                                    if (val.field_id == 'no-of-times') {
-                                        $scope.repeatNo[key] = val.value;
-                                    }
-                                }
-                                if ($scope.catId == 3) {
-                                    if (val.field_id == 'no-of-frequency-1') {
-                                        $scope.repeatFreq[key] = val.value;
-                                    }
-                                }
-                            });
-                        });
-                    }
-                    $scope.createdby = response.data.createdby;
-                    $scope.category = response.data.category;
-                    $scope.doctors = response.data.doctors;
-                    $scope.patient = response.data.patient;
-                    $scope.problems = response.data.problems;
-                    $scope.doctrs = response.data.shareDoctrs;
-                    $scope.langtext = response.data.langtext;
-                    $scope.language = response.data.lang.language;
+                //     console.log(response.data);
+                //     $scope.records = response.data.records;
+                //     if ($scope.records.length != 0) {
+                //         if ($scope.records[0].record_metadata.length == 6) {
+                //             $scope.limit = 3; //$scope.records[0].record_metadata.length;
+                //         }
+                //         angular.forEach($scope.records, function (value, key) {
+                //             //console.log(key);
+                //             angular.forEach(value.record_metadata, function (val, k) {
+                //                 console.log();
+                //                 if ($scope.catId == 30) {
+                //                     if (val.field_id == 'no-of-frequency') {
+                //                         $scope.repeatFreq[key] = val.value;
+                //                     }
+                //                     if (val.field_id == 'no-of-times') {
+                //                         $scope.repeatNo[key] = val.value;
+                //                     }
+                //                 }
+                //                 if ($scope.catId == 3) {
+                //                     if (val.field_id == 'no-of-frequency-1') {
+                //                         $scope.repeatFreq[key] = val.value;
+                //                     }
+                //                 }
+                //             });
+                //         });
+                //     }
+                //     $scope.createdby = response.data.createdby;
+                //     $scope.category = response.data.category;
+                //     $scope.doctors = response.data.doctors;
+                //     $scope.patient = response.data.patient;
+                //     $scope.problems = response.data.problems;
+                //     $scope.doctrs = response.data.shareDoctrs;
+                //     $scope.langtext = response.data.langtext;
+                //     $scope.language = response.data.lang.language;
                     
-                }, function errorCallback(response) {
+                // }, function errorCallback(response) {
+                    $scope.cardsViewRecords = {};
+                    $scope.cardsViewRecords = response.data;
+                    console.log('record details');
+                    console.log($scope.cardsViewRecords);
+                    
+                    
                     
                 });
             }
@@ -13689,6 +13709,8 @@ angular.module('your_app_name.controllers', [])
         .controller('DoctorJoinCtrl', function ($ionicLoading, $scope, $rootScope, $http, $compile, $ionicModal, $timeout, $stateParams, $cordovaCamera, $ionicHistory, $ionicPopup, $state, $window, $filter, $ionicScrollDelegate) {
             $scope.totalCreateByYou = 0;
             $scope.totalSharedWithYou = 0;
+            $scope.allCatsCreateByYou = {};
+            $scope.allCatsSharedWithYou = {};
             $http({
                         method: 'GET',
                         url: domain + 'doctors/createnewnote-check-if-existing',
@@ -13702,7 +13724,7 @@ angular.module('your_app_name.controllers', [])
                         $http({
                             method: 'GET',
                             url: domain + 'doctors/get-record-count-create-by-you',
-                            params: {doctorId: $scope.userId, patientId: $scope.patientId}
+                            params: {doctorId: $scope.userId, patientId: $scope.patientId, cnotes: 0}
                         }).then(function successCallback(response) {
                             $scope.allCatsCreateByYou = response.data;
                             angular.forEach($scope.allCatsCreateByYou, function (value, key) {
@@ -13715,7 +13737,7 @@ angular.module('your_app_name.controllers', [])
                          $http({
                             method: 'GET',
                             url: domain + 'doctors/get-record-count-shared-with-you',
-                            params: {doctorId: $scope.userId, patientId: $scope.patientId}
+                            params: {doctorId: $scope.userId, patientId: $scope.patientId, cnotes: 0}
                         }).then(function successCallback(response) {
                             $scope.allCatsSharedWithYou = response.data;
                             angular.forEach($scope.allCatsSharedWithYou, function (value, key) {

@@ -4,75 +4,116 @@
         .card { margin:5px 5px; }
     </style>
     <my-tabs class="themetabs">
-        <my-tab title="Created by you ({{totalCreateByYou}})" ng-click="subpage('createdbyu')"> 
+        <my-tab title="Created by you ({{totalCreateByYou}})"> <!-- ng-click="subpage('createdbyu')" --> 
             <div ng-controller="expandAccordianRecordsCtrl">
                 <div class="sldebxcontent hide RecordsView">
                     <button ng-click="closeRecView()" class="button button-add icon ion-backspace"> Close</button>
-                    <!-- <button ng-click="shareTreatment()" class="button button-share icon ion-android-share-alt">Share</button> -->
+                    <button ng-click="shareTreatment()" class="button button-share icon ion-android-share-alt">Share</button>
                     <!-- <button ng-click="addNew('{{catid}}')" class="button button-add icon ion-plus"> Add</button> -->
                 
-                    <div class="list recordview" style="margin-top: 50px;" >
-                        <div class="mt15" ng-if="records.length == 0"> <p class="txt-center" >No records here. Add now to get started.</p></div>
-                        <div class="posts-list"  ng-repeat="rec in records track by $index" ng-if="records.length > 0">
-                            <div  class="list card post-item"> <!-- ui-sref="{{catId == '8'?  app.preview-note({'id' : rec.id, 'appId': 1, 'res' : 'json'}):app.record-details({'id' : rec.id, 'shared': shared, 'res' : 'json'})}}"-->
-                            <!--<a ng-click="viewDetails(rec.id, rec.appointment_id, rec.user_id, rec.for, rec.doctor_id)" class="post-content item item-text-wrap">-->
-                                <div class="item item-divider mt15 ng-binding" >{{rec.share_with.fname}} {{rec.share_with.lname}}</div>
-                                <div class="row pr-b10">
-                                    <div class="col" ng-repeat="detail in rec.record_metadata| limitTo: limit"> 
-                                        <!--{{$index == 0 ? '<p>': ''}} -->
+                    <div class="row" ng-repeat="card in cardsViewRecords.records">
+                        <div class = "col greenbox card">
+                            <!--task -->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 30">
+                                <h4 class="cardtitle">
+                                    <span> Task </span>                    
+                                </h4>
+                                <div class="tdincard">
+                                    <p ng-if="card['task-1']"> {{card['task-1']}} - ({{card['status-5']}})</p>
+                                    <p ng-if="card['no-of-times']">Once every {{card['no-of-times']}} {{card['no-of-frequency']}}</p>
+                                    <p ng-if="card['start-time']">From: {{card['start-time']}}</p>
+                                    <p ng-if="card['end-time']">To: {{card['end-time']}}</p>
+                                </div>                
+                            </td-card>
 
-                                        <strong ng-if="detail.fields.name != 'no-of-frequency-1' && detail.fields.name != 'no-of-times'">{{detail.fields.field| capitalize}}  </strong><br/>
+                            <!--diet-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 21">
+                                <a ng-click="getDetails(card['record_id'])">
+                                    <h4 class="cardtitle">
+                                        <span>Diet</span>
+                                    </h4>
+                                 </a>
+                                    <div class="tdincard">
+                                        <p ng-if="card['start-date-4']">{{card['start-date-4']}} To {{card['end-date-3']}}</p>
+                                        <p ng-if="card['notes-21']">Notes: {{card['notes-21']}}</p>
+                                        <p ng-if="card['no-of-days']">No of days: {{card['no-of-days']}}</p>
+                                        <div> 
+                                            <div class="dietdays">
+                                                <button class="button button-positive button-small inbtn" ng-repeat="dd in cardsViewRecords['diet-details'][$parent.$parent.$parent.$index]" ng-controller="mealDetails2Ctrl" ng-click="daymodal2({{$index}},{{$parent.$parent.$index}})">
+                                                    <!-- <span class="icon ion-plus-circled"></span> --> Day {{$index + 1}}</button>
+                                            </div>
+                                        </div>
+                                    </div>                       
+                            </td-card>
 
-                                        <span ng-if="detail.fields.field == 'Prescribed By' || detail.fields.field == 'Measured By' || detail.fields.field == 'Referred By' || detail.fields.field == 'Performed By' || detail.fields.field == 'Consultant'">
-                                            {{doctors[$parent.$parent.$index]}}
-                                        </span>
-                                        <span ng-if="detail.fields.field == 'Related Problem'" >
-                                            {{problems[$parent.$parent.$index].value}}
-                                        </span>
-                                        <span ng-if="category[0].id == 30 && detail.fields.field == 'Frequency'" >
-                                            <span ng-if="detail.value == 'Repeat'">Once Every {{repeatNo[$parent.$parent.$parent.$parent.$index]}} {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
-                                            <span ng-if="detail.value != 'Repeat'">{{detail.value}}</span>
-                                        </span>
-                                        <span ng-if="category[0].id == 3 && detail.fields.name == 'frequency'" >
-                                            <span>{{detail.value}} time{{detail.value>1? 's':''}} in {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
-                                        </span>
-                                        <span ng-if="detail.fields.field == 'Patient'" >
-                                            {{patient[$parent.$parent.$index].fname}} {{patient[$parent.$parent.$index].lname}}
-                                        </span>
-
-                                        <span ng-if="detail.fields.field_type != '5' && detail.fields.name != 'frequency' && detail.fields.name != 'no-of-frequency-1' && detail.fields.name != 'no-of-frequency' && detail.fields.name != 'no-of-times' && detail.fields.field != 'Patient' && detail.fields.field != 'Frequency' && detail.fields.field != 'Prescribed By' && detail.fields.field != 'Measured By' && detail.fields.field != 'Referred By' && detail.fields.field != 'Performed By' && detail.fields.field != 'Consultant' && detail.fields.field != 'Related Problem'">
-                                            <span ng-if="detail.fields.field_type == 8 && detail.value != ''">
-                                                <span ng-if="detail.field_id == 'consultation-date'" >{{detail.value}}</span>
-                                                <span ng-if="detail.field_id != 'consultation-date'" >{{detail.value|dateFormat4}}</span>
-                                            </span>
-                                            <span ng-if="detail.fields.field_type == 12">{{detail.value|time1}}</span>
-                                            <span ng-if="detail.fields.field_type != 8 && detail.fields.field_type != 12">
-                                                <span ng-if="detail.value == ''">NA</span>
-                                                <span ng-if="detail.value != ''">{{detail.value}}</span>
-                                            </span>
-                                        </span>
-                                        <span ng-if="detail.fields.field_type == '5'">
-                                            <span ng-repeat="attach in rec.attachments" ng-init="selData = (attach.orginial_name).split('.')">
-                                                <span style="cursor: pointer;" class="" ng-click="showm(attach.host, attach.attachment_path, attach.orginial_name)" >
-                                                    <span class="ico"><i class="ion-paperclip"></i></span> ({{$index + 1}})
-                                                </span>
-                                            </span>
-                                        </span>
-                                        <!--                                    <span ng-if="detail.fields.name == 'no-of-times'"> 
-                                                                            </span>-->
-
-                                        <!--{{$index % 2 == 0|| $index == limit? '</p>' : ''}}
-                                        {{$index % 2 == 0 && $index < limit ? '<p>' : ''}} -->
-                                    </div>  
+                            <!--medication-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 3">
+                                <h4 class="cardtitle">
+                                    <span>Medication</span>
+                                </h4>
+                                <div class="tdincard">
+                                    <p ng-if="card.name">{{card.name}} - {{card.strength}} </p>
+                                    <p ng-if="card.frequency && card['no-of-frequency-1']"> ( Once every {{card.frequency}} {{card['no-of-frequency-1']}} )</p>
+                                    <p ng-if="card['start-date']">From: {{card['start-date']}}</p>
+                                    <p ng-if="card['end-date']">To: {{card['end-date']}}</p>
+                                    <p ng-if="card.intake">Intake: {{card.intake}}</p>
                                 </div>
-                                <div class="post-actions row post-footer">
-                                    <span>Created {{rec.created_at| datetime3 }} by {{userId==createdby[$index].id? 'You': createdby[$index].fname}}</span>
-                                </div>
-                                <div class="attachcard" ng-if="rec.attachments.length != 0">
-                                    <i class="ion-paperclip"></i></div>
-                            </div>
+                            </td-card>
+
+                            <!--investigations-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 5">
+                                <h4 class="cardtitle">
+                                    <span>Investigations</span>
+                                </h4>
+                                <div class="tdincard">
+                                    <p ng-if="card.investigation">{{card.investigation}}
+                                        <span ng-if="card['status-2']">({{card['status-2']}})</span>
+                                    </p>
+                                    <p ng-if="card['conducted-on-1']">Conducted on: {{card['conducted-on-1']}}</p>
+                                    <p ng-if="card['to-be-conducted-before-1']">To be Conducted before: {{card['to-be-conducted-before-1']}}</p>
+                                    <p ng-if="card['conducted-by']">Conducted by: {{card['conducted-by']}}</p>
+                                    <p ng-if="card['result']">Result: {{card['result']}} ({{card['inference']}})</p>
+                                    <p ng-if="card['reference-range']">Optimum Result: {{card['reference-range']}}</p>
+                                    <p ng-if="card['notes-4']">Notes: {{card['notes-4']}}</p>
+                                </div>                
+                            </td-card>
+
+                            <!--procedure-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 4">
+                                <h4 class="cardtitle">
+                                    <span>Procedure</span>
+                                </h4>
+                                <div class="tdincard"> 
+                                    <p ng-if="card['name-3']">{{card['name-3']}}
+                                        <span ng-if="card['status-1']">({{card['status-1']}})</span>
+                                    </p>
+                                    <p ng-if="card['conducted-on']">Conducted on: {{card['conducted-on']}}</p>
+                                    <p ng-if="card['to-be-conducted-before']">To be Conducted before: {{card['to-be-conducted-before']}}</p>
+                                    <p >
+                                      <span ng-if="card['performed-by']">Performed by: {{card['performed-by']}}</span>
+                                      <span ng-if="card['performed-at']"> at {{card['performed-at']}}</span>
+                                    </p>
+                                    <p ng-if="card['body-location']">Body-Location: {{card['body-location']}}</p>
+                                    <p ng-if="card['reference-range']">Optimum Result: {{card['reference-range']}}</p>
+                                    <p ng-if="card['notes-3']">Notes: {{card['notes-3']}}</p>
+                                </div>                
+                            </td-card>
+
+                            <!--referral-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 9">
+                                <h4 class="cardtitle">
+                                    <span>Referral</span>
+                                </h4>
+                                <div class="tdincard">
+                                    <p ng-if=" card['referred-to']">  {{card['referred-to']}}</p>
+                                    <p ng-if="card['referred-by']">Referred By: {{card['referred-by']}}</p>
+                                    <p ng-if="card['referred-on']">On: {{card['referred-on']}}</p>
+                                    <!-- <p ng-if="card['related-problem-5']">Related Problem: {{card['related-problem-5']}}</p> -->
+                                    <p ng-if="card['notes-9']">Notes: {{card['notes-9']}}</p>
+                                </div>                
+                            </td-card> 
                         </div>
-                    </div>      
+                    </div>       
                 </div>
 
                 <!--  ng-click="subpage('createdbyu')"  -->
@@ -83,7 +124,7 @@
                 <div ng-repeat="cat in allCatsCreateByYou" ng-if="$index % 3 == 0" class="row allRecords" width="99%">
                     <div class="col greenbox card">
                         <div class="post-heading">
-                            <a ng-click="expandAccordian(allCatsCreateByYou[$index].url,allCatsCreateByYou[$index].category,0)">
+                            <a ng-click="expandAccordian(allCatsCreateByYou[$index].url,allCatsCreateByYou[$index].category,1)">
                                 <h2 class="text-center">{{allCatsCreateByYou[$index].name}}</h2>
                                 <p class="text-center count">{{allCatsCreateByYou[$index].count}} </p>
                             </a>
@@ -91,7 +132,7 @@
                     </div>
                     <div class="col greenbox card" ng-if="allCatsCreateByYou.length > ($index + 1)">
                         <div class="post-heading">
-                            <a ng-click="expandAccordian(allCatsCreateByYou[$index + 1].url,allCatsCreateByYou[$index + 1].category,0)">
+                            <a ng-click="expandAccordian(allCatsCreateByYou[$index + 1].url,allCatsCreateByYou[$index + 1].category,1)">
                                 <h2 class="text-center">{{allCatsCreateByYou[$index + 1].name}}</h2>
                                 <p class="text-center count">{{allCatsCreateByYou[$index + 1].count}} </p>
                             </a>
@@ -99,7 +140,7 @@
                     </div>
                     <div class="col greenbox card"  ng-if="allCatsCreateByYou.length > ($index + 2)">
                         <div class="post-heading">
-                            <a ng-click="expandAccordian(allCatsCreateByYou[$index + 2].url,allCatsCreateByYou[$index + 2].category,0)">
+                            <a ng-click="expandAccordian(allCatsCreateByYou[$index + 2].url,allCatsCreateByYou[$index + 2].category,1)">
                                 <h2 class="text-center">{{allCatsCreateByYou[$index + 2].name}}</h2>
                                 <p class="text-center count">{{allCatsCreateByYou[$index + 2].count}} </p>
                             </a>
@@ -109,76 +150,111 @@
             </div>
         </my-tab>        
 
-        <my-tab title="Shared with you ({{totalSharedWithYou}})" ng-click="subpage('createdbyu')"> 
+        <my-tab title="Shared with you ({{totalSharedWithYou}})"> <!-- ng-click="subpage('createdbyu')" --> 
             <div ng-controller="expandAccordianRecordsCtrl">
-                <div class="sldebxcontent hide RecordsView">
-                    <button ng-click="closeRecView()" class="button button-add icon ion-backspace"> Close</button>
-                    <!-- <button ng-click="shareTreatment()" class="button button-share icon ion-android-share-alt">Share</button> -->
-                    <!-- <button ng-click="addNew('{{catid}}')" class="button button-add icon ion-plus"> Add</button> -->
-                
-                    <div class="list recordview" style="margin-top: 50px;" >
-                        <div class="mt15" ng-if="records.length == 0"> <p class="txt-center" >No records here. Add now to get started.</p></div>
-                        <div class="posts-list"  ng-repeat="rec in records track by $index" ng-if="records.length > 0">
-                            <div  class="list card post-item"> <!-- ui-sref="{{catId == '8'?  app.preview-note({'id' : rec.id, 'appId': 1, 'res' : 'json'}):app.record-details({'id' : rec.id, 'shared': shared, 'res' : 'json'})}}"-->
-                            <!--<a ng-click="viewDetails(rec.id, rec.appointment_id, rec.user_id, rec.for, rec.doctor_id)" class="post-content item item-text-wrap">-->
-                                <div class="item item-divider mt15 ng-binding" >{{rec.share_with.fname}} {{rec.share_with.lname}}</div>
-                                <div class="row pr-b10">
-                                    <div class="col" ng-repeat="detail in rec.record_metadata| limitTo: limit"> 
-                                        <!--{{$index == 0 ? '<p>': ''}} -->
+                <div class="row" ng-repeat="card in cardsViewRecords.records">
+                        <div class = "col greenbox card">
+                            <!--task -->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 30">
+                                <h4 class="cardtitle">
+                                    <span> Task </span>                    
+                                </h4>
+                                <div class="tdincard">
+                                    <p ng-if="card['task-1']"> {{card['task-1']}} - ({{card['status-5']}})</p>
+                                    <p ng-if="card['no-of-times']">Once every {{card['no-of-times']}} {{card['no-of-frequency']}}</p>
+                                    <p ng-if="card['start-time']">From: {{card['start-time']}}</p>
+                                    <p ng-if="card['end-time']">To: {{card['end-time']}}</p>
+                                </div>                
+                            </td-card>
 
-                                        <strong ng-if="detail.fields.name != 'no-of-frequency-1' && detail.fields.name != 'no-of-times'">{{detail.fields.field| capitalize}}  </strong><br/>
+                            <!--diet-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 21">
+                                <a ng-click="getDetails(card['record_id'])">
+                                    <h4 class="cardtitle">
+                                        <span>Diet</span>
+                                    </h4>
+                                 </a>
+                                    <div class="tdincard">
+                                        <p ng-if="card['start-date-4']">{{card['start-date-4']}} To {{card['end-date-3']}}</p>
+                                        <p ng-if="card['notes-21']">Notes: {{card['notes-21']}}</p>
+                                        <p ng-if="card['no-of-days']">No of days: {{card['no-of-days']}}</p>
+                                        <div> 
+                                            <div class="dietdays">
+                                                <button class="button button-positive button-small inbtn" ng-repeat="dd in cardsViewRecords['diet-details'][$parent.$parent.$parent.$index]" ng-controller="mealDetails2Ctrl" ng-click="daymodal2({{$index}},{{$parent.$parent.$index}})">
+                                                    <!-- <span class="icon ion-plus-circled"></span> --> Day {{$index + 1}}</button>
+                                            </div>
+                                        </div>
+                                    </div>                       
+                            </td-card>
 
-                                        <span ng-if="detail.fields.field == 'Prescribed By' || detail.fields.field == 'Measured By' || detail.fields.field == 'Referred By' || detail.fields.field == 'Performed By' || detail.fields.field == 'Consultant'">
-                                            {{doctors[$parent.$parent.$index]}}
-                                        </span>
-                                        <span ng-if="detail.fields.field == 'Related Problem'" >
-                                            {{problems[$parent.$parent.$index].value}}
-                                        </span>
-                                        <span ng-if="category[0].id == 30 && detail.fields.field == 'Frequency'" >
-                                            <span ng-if="detail.value == 'Repeat'">Once Every {{repeatNo[$parent.$parent.$parent.$parent.$index]}} {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
-                                            <span ng-if="detail.value != 'Repeat'">{{detail.value}}</span>
-                                        </span>
-                                        <span ng-if="category[0].id == 3 && detail.fields.name == 'frequency'" >
-                                            <span>{{detail.value}} time{{detail.value>1? 's':''}} in {{repeatFreq[$parent.$parent.$parent.$parent.$index]}}</span>
-                                        </span>
-                                        <span ng-if="detail.fields.field == 'Patient'" >
-                                            {{patient[$parent.$parent.$index].fname}} {{patient[$parent.$parent.$index].lname}}
-                                        </span>
-
-                                        <span ng-if="detail.fields.field_type != '5' && detail.fields.name != 'frequency' && detail.fields.name != 'no-of-frequency-1' && detail.fields.name != 'no-of-frequency' && detail.fields.name != 'no-of-times' && detail.fields.field != 'Patient' && detail.fields.field != 'Frequency' && detail.fields.field != 'Prescribed By' && detail.fields.field != 'Measured By' && detail.fields.field != 'Referred By' && detail.fields.field != 'Performed By' && detail.fields.field != 'Consultant' && detail.fields.field != 'Related Problem'">
-                                            <span ng-if="detail.fields.field_type == 8 && detail.value != ''">
-                                                <span ng-if="detail.field_id == 'consultation-date'" >{{detail.value}}</span>
-                                                <span ng-if="detail.field_id != 'consultation-date'" >{{detail.value|dateFormat4}}</span>
-                                            </span>
-                                            <span ng-if="detail.fields.field_type == 12">{{detail.value|time1}}</span>
-                                            <span ng-if="detail.fields.field_type != 8 && detail.fields.field_type != 12">
-                                                <span ng-if="detail.value == ''">NA</span>
-                                                <span ng-if="detail.value != ''">{{detail.value}}</span>
-                                            </span>
-                                        </span>
-                                        <span ng-if="detail.fields.field_type == '5'">
-                                            <span ng-repeat="attach in rec.attachments" ng-init="selData = (attach.orginial_name).split('.')">
-                                                <span style="cursor: pointer;" class="" ng-click="showm(attach.host, attach.attachment_path, attach.orginial_name)" >
-                                                    <span class="ico"><i class="ion-paperclip"></i></span> ({{$index + 1}})
-                                                </span>
-                                            </span>
-                                        </span>
-                                        <!--                                    <span ng-if="detail.fields.name == 'no-of-times'"> 
-                                                                            </span>-->
-
-                                        <!--{{$index % 2 == 0|| $index == limit? '</p>' : ''}}
-                                        {{$index % 2 == 0 && $index < limit ? '<p>' : ''}} -->
-                                    </div>  
+                            <!--medication-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 3">
+                                <h4 class="cardtitle">
+                                    <span>Medication</span>
+                                </h4>
+                                <div class="tdincard">
+                                    <p ng-if="card.name">{{card.name}} - {{card.strength}} </p>
+                                    <p ng-if="card.frequency && card['no-of-frequency-1']"> ( Once every {{card.frequency}} {{card['no-of-frequency-1']}} )</p>
+                                    <p ng-if="card['start-date']">From: {{card['start-date']}}</p>
+                                    <p ng-if="card['end-date']">To: {{card['end-date']}}</p>
+                                    <p ng-if="card.intake">Intake: {{card.intake}}</p>
                                 </div>
-                                <div class="post-actions row post-footer">
-                                    <span>Created {{rec.created_at| datetime3 }} by {{userId==createdby[$index].id? 'You': createdby[$index].fname}}</span>
-                                </div>
-                                <div class="attachcard" ng-if="rec.attachments.length != 0">
-                                    <i class="ion-paperclip"></i></div>
-                            </div>
+                            </td-card>
+
+                            <!--investigations-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 5">
+                                <h4 class="cardtitle">
+                                    <span>Investigations</span>
+                                </h4>
+                                <div class="tdincard">
+                                    <p ng-if="card.investigation">{{card.investigation}}
+                                        <span ng-if="card['status-2']">({{card['status-2']}})</span>
+                                    </p>
+                                    <p ng-if="card['conducted-on-1']">Conducted on: {{card['conducted-on-1']}}</p>
+                                    <p ng-if="card['to-be-conducted-before-1']">To be Conducted before: {{card['to-be-conducted-before-1']}}</p>
+                                    <p ng-if="card['conducted-by']">Conducted by: {{card['conducted-by']}}</p>
+                                    <p ng-if="card['result']">Result: {{card['result']}} ({{card['inference']}})</p>
+                                    <p ng-if="card['reference-range']">Optimum Result: {{card['reference-range']}}</p>
+                                    <p ng-if="card['notes-4']">Notes: {{card['notes-4']}}</p>
+                                </div>                
+                            </td-card>
+
+                            <!--procedure-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 4">
+                                <h4 class="cardtitle">
+                                    <span>Procedure</span>
+                                </h4>
+                                <div class="tdincard"> 
+                                    <p ng-if="card['name-3']">{{card['name-3']}}
+                                        <span ng-if="card['status-1']">({{card['status-1']}})</span>
+                                    </p>
+                                    <p ng-if="card['conducted-on']">Conducted on: {{card['conducted-on']}}</p>
+                                    <p ng-if="card['to-be-conducted-before']">To be Conducted before: {{card['to-be-conducted-before']}}</p>
+                                    <p >
+                                      <span ng-if="card['performed-by']">Performed by: {{card['performed-by']}}</span>
+                                      <span ng-if="card['performed-at']"> at {{card['performed-at']}}</span>
+                                    </p>
+                                    <p ng-if="card['body-location']">Body-Location: {{card['body-location']}}</p>
+                                    <p ng-if="card['reference-range']">Optimum Result: {{card['reference-range']}}</p>
+                                    <p ng-if="card['notes-3']">Notes: {{card['notes-3']}}</p>
+                                </div>                
+                            </td-card>
+
+                            <!--referral-->
+                            <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 9">
+                                <h4 class="cardtitle">
+                                    <span>Referral</span>
+                                </h4>
+                                <div class="tdincard">
+                                    <p ng-if=" card['referred-to']">  {{card['referred-to']}}</p>
+                                    <p ng-if="card['referred-by']">Referred By: {{card['referred-by']}}</p>
+                                    <p ng-if="card['referred-on']">On: {{card['referred-on']}}</p>
+                                    <!-- <p ng-if="card['related-problem-5']">Related Problem: {{card['related-problem-5']}}</p> -->
+                                    <p ng-if="card['notes-9']">Notes: {{card['notes-9']}}</p>
+                                </div>                
+                            </td-card> 
                         </div>
-                    </div>       
-                </div>
+                    </div>
                 <!--  ng-click="subpage('createdbyu')"  -->
                 <div class="tabcontainer" >
                     <p ng-if="records.length == 0">No record(s) found.</p>
@@ -187,7 +263,7 @@
                 <div ng-repeat="cat in allCatsSharedWithYou" ng-if="$index % 3 == 0" class="row allRecords" width="99%">
                     <div class="col greenbox card">
                         <div class="post-heading">
-                            <a ng-click="expandAccordian(allCatsSharedWithYou[$index].url,allCatsSharedWithYou[$index].category,1)">
+                            <a ng-click="expandAccordian(allCatsSharedWithYou[$index].url,allCatsSharedWithYou[$index].category,0)">
                                 <h2 class="text-center">{{allCatsSharedWithYou[$index].name}}</h2>
                                 <p class="text-center count">{{allCatsSharedWithYou[$index].count}} </p>
                             </a>
@@ -195,7 +271,7 @@
                     </div>
                     <div class="col greenbox card" ng-if="allCatsSharedWithYou.length > ($index + 1)">
                         <div class="post-heading">
-                            <a ng-click="expandAccordian(allCatsSharedWithYou[$index + 1].url,allCatsSharedWithYou[$index + 1].category,1)">
+                            <a ng-click="expandAccordian(allCatsSharedWithYou[$index + 1].url,allCatsSharedWithYou[$index + 1].category,0)">
                                 <h2 class="text-center">{{allCatsSharedWithYou[$index + 1].name}}</h2>
                                 <p class="text-center count">{{allCatsSharedWithYou[$index + 1].count}} </p>
                             </a>
@@ -203,7 +279,7 @@
                     </div>
                     <div class="col greenbox card"  ng-if="allCatsSharedWithYou.length > ($index + 2)">
                         <div class="post-heading">
-                            <a ng-click="expandAccordian(allCatsSharedWithYou[$index + 2].url,allCatsSharedWithYou[$index + 2].category,1)">
+                            <a ng-click="expandAccordian(allCatsSharedWithYou[$index + 2].url,allCatsSharedWithYou[$index + 2].category,0)">
                                 <h2 class="text-center">{{allCatsSharedWithYou[$index + 2].name}}</h2>
                                 <p class="text-center count">{{allCatsSharedWithYou[$index + 2].count}} </p>
                             </a>
