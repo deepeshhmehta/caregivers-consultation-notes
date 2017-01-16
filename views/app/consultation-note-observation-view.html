@@ -4,19 +4,12 @@
             <a ng-click="shareObservation(cards)" class="button btn-share" id="shareObs"><i class="icon ion-android-share-alt"/></a>
             <a class="button btn-delete" style="display: none" id="cancelObs" ng-click="cancelObservation()"><i class="icon ion-android-close"></i></a>
         </div>
-    	<div style="float:right">
-    		<a ng-click="addObservation()" class="button btn-share"><i class="icon ion-ios-plus-outline"/></a>    
+    	<div style="float:left">
+    		<a ng-click="addObservationDiagnosis(1)" class="button btn-share"><i class="icon ion-ios-plus-outline"/></a>    
     	</div>
+        <div class ="clr"/></div>
     </div>
-    <div class="hide observationAdd">
-        <div class="item item-divider"><span>observation </span></div> 
-        <label class="item item-input listreq">
-          <textarea ng-model="data.observation" type = "text" required placeholder="observation" rows="25" cols="50" style="resize: none;">            
-          </textarea>
-        </label>
-        <button ng-click="saveObservation()" class="button button-positive button-block">Add</button>
-        <button ng-click="cancelAction()" class="button button-delete button-block">Cancel</button>
-    </div>
+    
         <div class="clr"></div>
         <div class="list card post-item greenbox" ng-repeat="card in cards">
             <a ng-click="">

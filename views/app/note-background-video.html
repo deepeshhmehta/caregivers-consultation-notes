@@ -44,57 +44,32 @@
         </my-tab>
 
         <my-tab title ="Family">                            
-            <my-tabs class="ctabs">
-                <my-tab title ="View">
-                    <div class="mtabcon" ng-controller="FamilyBackgroundCtrl">
-                        <div class="list card post-item greenbox" ng-repeat="card in cards">
-                            <a> <!-- ng-click="selectedCard(card.id)" -->
-                                <div class="card-content p0">
-                                    <div class="row post-heading item item-text-wrap ">
-                                        <div class="col col-70">
-                                            <h2 class="post-title">{{card.relation.relation_name}}: {{card.relative_name}} ({{card.relative_age}} Years)</h2>
-                                        </div>
-                                    </div>
-
-                                    <div class="post-content item item-text-wrap p0" >
-                                        <p ng-if="card.problems.length == 0"> No problems fed</p>
-                                        <div class="row" ng-repeat="problem in card.problems">
-                                            <span>{{problem.problem.condition}}</span>
-                                        </div>
-                                        <div class="post-footer p0">
-                                        </div>
-                                    </div>
+            <div class="mtabcon" ng-controller="FamilyBackgroundCtrl">
+                <div style="float:left">
+                    <a ng-click="toggleHiddenTab('addfamilytab')" class="button btn-share"><i class="icon ion-ios-plus-outline"/></a>    
+                </div>
+                <div class ="clr"></div>
+                <div class="list card post-item greenbox" ng-repeat="card in cards">
+                    <a> <!-- ng-click="selectedCard(card.id)" -->
+                        <div class="card-content p0">
+                            <div class="row post-heading item item-text-wrap ">
+                                <div class="col col-70">
+                                    <h2 class="post-title">{{card.relation.relation_name}}: {{card.relative_name}} ({{card.relative_age}} Years)</h2>
                                 </div>
-                            </a>
+                            </div>
+
+                            <div class="post-content item item-text-wrap p0" >
+                                <p ng-if="card.problems.length == 0"> No problems fed</p>
+                                <div class="row" ng-repeat="problem in card.problems">
+                                    <span>{{problem.problem.condition}}</span>
+                                </div>
+                                <div class="post-footer p0">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </my-tab>
-                <my-tab title ="Add">
-                    <div class="mtabcon" ng-controller="FamilyMemberCtrl">
-                        <div class="item item-divider mt15" >Relationship</div>
-                        <label class="item item-list listreq">
-                            <select ng-model = "newrelation.relationid" class ="cselect" id="problemselect">
-                              <option ng-repeat="option in select" value={{option.id}}>{{option.relation_name}}</option>
-                            </select>
-                        </label>
-                        <label class="item item-list listreq" ng-if="newrelation.relationid == 0">
-                            <input ng-model="newrelation.relationname" type = "text" placeholder=" Relation name (Father/Mother)" id="newrelation" />
-                        </label>
-                        <div class="item item-divider mt15" >Name</div>
-                        <label class="item item-list listreq">
-                            <input ng-model="newrelation.relativename" type = "text" placeholder="Name" />
-                        </label>
-                        <div class="item item-divider mt15" >Age</div>
-                        <label class="item item-list listreq">
-                            <input ng-model="newrelation.age" type = "number" placeholder="Age" />
-                        </label>
-                        <div class="item item-divider mt15" > Quick History
-                            <button class="Cstmbutn button-small mb15 col-25" style="float:right; padding:0;" ng-controller="knowConditionCtrl" ng-click="modal.show()"><span class="icon ion-plus-circled"></span> Add </button>
-                        </div>
-                        <button ng-click="addRelation()" class="button button-positive button-block">Add Relation</button>
-                    </div>
-                </my-tab>
-            </my-tabs>            
+                    </a>
+                </div>
+            </div>
         </my-tab>
     </my-tabs>
 </div>

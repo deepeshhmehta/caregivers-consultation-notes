@@ -19,7 +19,8 @@
             <div id='myPublisherDiv' style="position:absolute;right: 10px;bottom:10px"></div> 
             <div id='subscribersDiv' class="subscribediv">Waiting for patient to join!</div> 
         </div>
-
+        
+        <!-- background -->
         <div class="crighttab greentab" id="cstab1">
             <div class="ctabbtn" ng-click="pulltab('cstab1')">
                 <span class="ion-plus"></span>
@@ -37,9 +38,10 @@
             </div>
         </div>
 
+        <!-- details (obs/diag/treatment)-->
         <div class="crighttab greentab" id="cstab2" >
             <div class="ctabbtn" ng-click="pulltab('cstab2')" style="top:45px;">
-                <span class="ion-eye"></span>
+                <span class="ion-edit"></span>
             </div> 
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
@@ -55,6 +57,7 @@
             <div class="clr"></div>
         </div>
 
+        <!-- view records -->
         <div class="crighttab greentab" id="cstab3" >
             <div class="ctabbtn" ng-click="pulltab('cstab3')" style="top:90px;">
                 <span class="ion-eye"></span>
@@ -72,6 +75,65 @@
             </div>
             <div class="clr"></div>
         </div>
+
+        <!-- add family -->
+        <div class="crighttab greentab hide" id="addfamilytab" >
+            <div class="ctabbtn" ng-click="pulltab('addfamilytab')" style="top:135px;">
+                <span class="ion-eye"></span>
+            </div> 
+            <div class="sidetabcontent">
+                <ion-scroll direction="y" class="theroot"> 
+                   
+                    <div class="clr"></div><div class="clr"></div>
+                    <div class="sldebxcontent" ng-show="1">
+                        <div ng-include src="'views/app/consultation-note-add-family-member.html'" ></div>                
+                    </div>
+
+                    
+                </ion-scroll>
+            </div>
+            <div class="clr"></div>
+        </div>
+
+        <!-- Add Obervation Diagnosis -->
+        <div class="crighttab greentab hide" id="obsdiagtab" >
+            <div class="ctabbtn" ng-click="pulltab('obsdiagtab')" style="top:180px;">
+                <span class="ion-eye"></span>
+            </div> 
+            <div class="sidetabcontent">
+                <ion-scroll direction="y" class="theroot"> 
+                   
+                    <div class="clr"></div><div class="clr"></div>
+                    <div class="sldebxcontent" ng-show="1">
+                        <div ng-include src="'views/app/consultation-note-observation-diagnosis-add.html'" ></div>                
+                    </div>
+
+                    
+                </ion-scroll>
+            </div>
+            <div class="clr"></div>
+        </div>
+
+        <!-- Add Treatment -->
+        <div class="crighttab greentab hide" id="addtreatmenttab" >
+            <div class="ctabbtn" ng-click="pulltab('addtreatmenttab')" style="top:180px;">
+                <span class="ion-eye"></span>
+            </div> 
+            <div class="sidetabcontent">
+                <ion-scroll direction="y" class="theroot"> 
+                   
+                    <div class="clr"></div><div class="clr"></div>
+                    <div class="sldebxcontent" ng-show="1">
+                        <div ng-include src="'views/app/consultation-note-treatment-add-video.html'" ></div>                
+                    </div>
+
+                    
+                </ion-scroll>
+            </div>
+            <div class="clr"></div>
+        </div>
+
+
     </ion-content>
 
     <!-- mute show/hide  -->

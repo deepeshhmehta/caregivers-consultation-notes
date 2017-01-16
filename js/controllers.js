@@ -848,7 +848,6 @@ angular.module('your_app_name.controllers', [])
             //$scope.curT = new Date()$filter('date')(new Date(), 'H:i');
             $scope.userId = get('id');
             $scope.patientId = window.localStorage.getItem('patientId');
-            $scope.categoryId = 0;
             $scope.fields = [];
             $scope.problems = [];
             $scope.doctrs = [];
@@ -856,7 +855,8 @@ angular.module('your_app_name.controllers', [])
             $scope.meals = [{time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}];
             $scope.mealDetails = [];
             $scope.dayMeal = [];
-            $scope.loadAddData = function(catid){
+            
+            $scope.loadrecordData = function(catid){
                 $scope.categoryId = catid;
                 $http({
                     method: 'GET',
@@ -890,11 +890,14 @@ angular.module('your_app_name.controllers', [])
                             }
                         });
                     }
+                    
                     $ionicLoading.hide();
                 }, function errorCallback(response) {
                     console.log(response);
                 });
             }
+
+            $scope.loadrecordData($scope.categoryId);
 
             $scope.getCondition = function (id, con) {
                 console.log(id + "==" + con);
@@ -949,6 +952,7 @@ angular.module('your_app_name.controllers', [])
                                     console.log(response);
                                     if (response.data == 'Success') {
                                         alert("Records shared successfully!");
+                                        $scope.toggleHiddenTab('addtreatmenttab');
                                         //$state.go('app.records-view', {'id': $scope.categoryId, 'patientId': $scope.patientId, 'shared': 0}, {}, {reload: true});
                                     }
                                 }, function errorCallback(e) {
@@ -957,10 +961,12 @@ angular.module('your_app_name.controllers', [])
                             } else {
 
                                 alert("Record added successfully!");
+                                $scope.toggleHiddenTab('addtreatmenttab');
                             }
                         } else if (response.err != '') {
                             alert('Please fill mandatory fields');
                         }
+                        $scope.toggleHiddenTab('addtreatmenttab');
                     });
                 }
 
@@ -3673,7 +3679,9 @@ angular.module('your_app_name.controllers', [])
             $scope.conId = [];
             $scope.conIds = [];
             $scope.selConditions = [];
-            $http({
+            
+            $scope.loadFamilyMembers = function(){
+                $http({
                         method: 'GET',
                         url: domain + 'doctors/consultation-family-list',
                         params: {noteid: $scope.noteid}
@@ -3688,6 +3696,9 @@ angular.module('your_app_name.controllers', [])
                         console.log(response.data);
                         console.log($scope.cards);
                     });
+            }
+
+            $scope.loadFamilyMembers();
 
             $http({
                 method: 'GET',
@@ -3714,24 +3725,32 @@ angular.module('your_app_name.controllers', [])
                         }).then(function successCallback(response) {
                             $ionicLoading.hide();
                             console.log(response.data);
+                            $scope.newrelation = {};
+                            $scope.newrelation['noteid'] = $scope.noteid;
+                            $scope.newrelation['relationid'] = '-1';
+                            $scope.newrelation['relationname'] = "";
+                            $scope.newrelation['relativename']="";
                             if(get('familynavigate') == 1){
                                 $state.go(response.data.redirect_url,{'id':  $stateParams.id}, {relaod: true});
                             }else{
-                                $http({
-                                            method: 'GET',
-                                            url: domain + 'doctors/consultation-family-list',
-                                            params: {doctor_id: $scope.doctorId,patient_id: $scope.patientId}
-                                        }).then(function successCallback(response) {
-                                            $scope.cards = response.data.existing_relations;
+                                console.log('reload family members');
+                                $scope.loadFamilyMembers();
+                                $scope.toggleHiddenTab('addfamilytab');
+                                // $http({
+                                //             method: 'GET',
+                                //             url: domain + 'doctors/consultation-family-list',
+                                //             params: {doctor_id: $scope.doctorId,patient_id: $scope.patientId}
+                                //         }).then(function successCallback(response) {
+                                //             $scope.cards = response.data.existing_relations;
                                             
-                                            $scope.select={};
-                                            $scope.select = response.data.relation_master;
-                                            $scope.select.unshift($scope.temp);
-                                            $scope.select.push($scope.temp2);
+                                //             $scope.select={};
+                                //             $scope.select = response.data.relation_master;
+                                //             $scope.select.unshift($scope.temp);
+                                //             $scope.select.push($scope.temp2);
 
-                                            console.log(response.data);
-                                            console.log($scope.cards);
-                                        });
+                                //             console.log(response.data);
+                                //             console.log($scope.cards);
+                                //         });
                             }
                         }, function errorCallback(e) {
                             console.log(e);
@@ -5119,6 +5138,7 @@ angular.module('your_app_name.controllers', [])
                     }).then(function successCallback(response) {
                         alert(response.data.message);
                         $scope.doRefresh();
+                        
                     });
             }
 
@@ -5139,16 +5159,16 @@ angular.module('your_app_name.controllers', [])
                 $scope.modal = modal;
             });
 
-            $scope.doRefresh = function(){
+            $scope.doRefreshDiagnosis = function(){
                 $http({
                         method: 'GET',
                         url: domain + 'doctors/consultation-notes-diagnosis',
                         params: {note_id: $scope.noteid}
                     }).then(function successCallback(response) {
-                        $scope.cards = {};
-                        $scope.cards = response.data.existing_diagnosis;
+                        $scope.cardsDiagnosis = {};
+                        $scope.cardsDiagnosis = response.data.existing_diagnosis;
 
-                        console.log($scope.cards);
+                        console.log($scope.cardsDiagnosis);
                         console.log(response.data.message);
                     });
                 $scope.$broadcast('scroll.refreshComplete');
@@ -5165,7 +5185,8 @@ angular.module('your_app_name.controllers', [])
                         jQuery('.diagnosisAdd').hide('slow');
                         $scope.data['diagnosis'] = "";
                         alert(response.data.message);
-                        $scope.doRefresh();
+                        $scope.doRefreshDiagnosis();
+                        $scope.toggleHiddenTab('obsdiagtab');
                     });
             }
             $scope.cancelAction = function(){
@@ -5176,7 +5197,7 @@ angular.module('your_app_name.controllers', [])
             $timeout(function(){
                 $scope.noteid = get('noteid');
                 $scope.data['noteid'] = $scope.noteid;
-                $scope.doRefresh();
+                $scope.doRefreshDiagnosis();
             },2000);
         })  
 
@@ -5218,16 +5239,17 @@ angular.module('your_app_name.controllers', [])
                     }).then(function successCallback(response) {
                         alert(response.data.message);
                         $scope.doRefresh();
+                        
                     });
             }
 
-            $scope.doRefresh();            
+            $scope.doRefreshObservations();            
         })
 
         .controller('ConsultationsNotesObservationViewVideoCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
             $scope.data = {};
 
-            $scope.doRefresh = function(){
+            $scope.doRefreshObservations = function(){
                 $http({
                         method: 'GET',
                         url: domain + 'doctors/consultation-notes-observations',
@@ -5259,16 +5281,17 @@ angular.module('your_app_name.controllers', [])
                         data: JSON.stringify($scope.data)
                     }).then(function successCallback(response) {
                         alert(response.data.message);
-                        $scope.doRefresh();
                         jQuery('.observationAdd').hide('slow');
                         $scope.data['observation'] = "";
+                        $scope.doRefreshObservations();
+                        $scope.toggleHiddenTab('obsdiagtab');
                     });
             }
 
             $timeout(function(){
                 $scope.noteid = get('noteid');
                 $scope.data['noteid'] = $scope.noteid;
-                $scope.doRefresh();
+                $scope.doRefreshObservations();
             },2000);
         })
 
@@ -14203,15 +14226,15 @@ angular.module('your_app_name.controllers', [])
 
             store({'familynavigate': 0});
             $ionicLoading.show({template: 'Loading...'});
-//            if (!get('loadedOnce')) {
-//                store({'loadedOnce': 'true'});
-//                $window.location.reload(true);
-//                // don't reload page, but clear localStorage value so it'll get reloaded next time
-//
-//            } else {
-//                // set the flag and reload the page
-//                window.localStorage.removeItem('loadedOnce');
-//            }
+           // if (!get('loadedOnce')) {
+           //     store({'loadedOnce': 'true'});
+           //     $window.location.reload(true);
+           //     // don't reload page, but clear localStorage value so it'll get reloaded next time
+
+           // } else {
+           //     // set the flag and reload the page
+           //     window.localStorage.removeItem('loadedOnce');
+           // }
             $scope.hideformD = function () {
                 $scope.tmeasurements = false;
                 $scope.tobervation = false;
@@ -15580,15 +15603,31 @@ angular.module('your_app_name.controllers', [])
             sidetab('#cstab1');
             sidetab('#cstab2');
             sidetab('#cstab3');
+            sidetab('#addfamilytab');
+            sidetab('#obsdiagtab');
+            sidetab('#addtreatmenttab');
+
+            $scope.toggleHiddenTab = function(tabid){
+                if (jQuery('#' + tabid).hasClass('active')) { 
+                    jQuery('#' + tabid).hide('slow');
+                } else {
+                    jQuery('#' + tabid).show('slow');    
+                }
+                
+                $scope.pulltab(tabid);
+                
+            }
 
             $scope.pulltab = function (d) {
                 console.log(d);
                 var ww = (jQuery(window).width()) - 40;
                 jQuery('#' + d).toggleClass('active');
-                if (jQuery('#' + d).hasClass('active')) {
+                if (jQuery('#' + d).hasClass('active')) { 
+
                     jQuery('#' + d).css('transform', 'translate3d(0px, 0px, 0px)')
                 } else {
                     jQuery('#' + d).css('transform', 'translate3d(' + ww + 'px, 0px, 0px)')
+                    
                 }
                 if (d == 'cstab2') {
                     $scope.changemaincate('pbackground');
@@ -15598,6 +15637,15 @@ angular.module('your_app_name.controllers', [])
                 }
             };
             /* end of rightsidetab */
+
+            $scope.addObservationDiagnosis = function(obsDiag){
+                $scope.observationDiagnosis = obsDiag;
+                $scope.toggleHiddenTab('obsdiagtab');
+            }
+
+            $scope.openAddRecord = function(){                
+                $scope.toggleHiddenTab('addtreatmenttab');
+            }
         })
 
         .controller('DoctorJoinOnlyCtrl', function ($ionicLoading, $scope, $rootScope, $http, $compile, $ionicModal, $timeout, $stateParams, $cordovaCamera, $ionicHistory, $ionicPopup, $state, $window, $filter, $ionicScrollDelegate) {

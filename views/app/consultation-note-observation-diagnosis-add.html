@@ -1,0 +1,24 @@
+<div>
+	<div class="diagnosisAdd" ng-if="observationDiagnosis == 2" ng-controller="ConsultationsNotesDiagnosisViewVideoCtrl">
+	    <div class="item item-divider"><span>Diagnosis </span></div> 
+	    <label class="item item-input listreq">
+	      <textarea ng-model="data.diagnosis" type = "text" required placeholder="Diagnosis" rows="25" cols="50" style="resize: none;">            
+	      </textarea>
+	    </label>
+	    <button ng-click="saveDiagnosis()" class="button button-positive button-block">Add</button>
+	    <button ng-click="cancelAction()" class="button button-delete button-block">Cancel</button>
+	</div>
+	<div class="observationAdd" ng-if="observationDiagnosis == 1" ng-controller="ConsultationsNotesObservationViewVideoCtrl">
+        <div class="item item-divider"><span>observation </span></div> 
+        <label class="item item-input listreq">
+          <textarea ng-model="data.observation" type = "text" required placeholder="observation" rows="25" cols="50" style="resize: none;">            
+          </textarea>
+        </label>
+        <button ng-click="saveObservation()" class="button button-positive button-block">Add</button>
+        <button ng-click="toggleHiddenTab('obsdiagtab')" class="button button-add button-block">Cancel</button>
+    </div>
+    <div ng-if="!observationDiagnosis">
+    	<p>There was some error please click here and try again.</p>
+    	<button ng-click="toggleHiddenTab('obsdiagtab')" class="button button-add button-block">Cancel</button>
+    </div>
+</div>
