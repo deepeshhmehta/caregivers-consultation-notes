@@ -23,7 +23,7 @@
         <!-- background -->
         <div class="crighttab greentab" id="cstab1">
             <div class="ctabbtn" ng-click="pulltab('cstab1')">
-                <span class="ion-plus"></span>
+                <span class="ion-person"></span>
             </div>
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
@@ -60,7 +60,7 @@
         <!-- view records -->
         <div class="crighttab greentab" id="cstab3" >
             <div class="ctabbtn" ng-click="pulltab('cstab3')" style="top:90px;">
-                <span class="ion-eye"></span>
+                <span class="ion-folder"></span>
             </div> 
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
@@ -79,7 +79,7 @@
         <!-- add family -->
         <div class="crighttab greentab hide" id="addfamilytab" >
             <div class="ctabbtn" ng-click="pulltab('addfamilytab')" style="top:135px;">
-                <span class="ion-eye"></span>
+                <span class="ion-android-people"></span>
             </div> 
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
@@ -98,7 +98,7 @@
         <!-- Add Obervation Diagnosis -->
         <div class="crighttab greentab hide" id="obsdiagtab" >
             <div class="ctabbtn" ng-click="pulltab('obsdiagtab')" style="top:180px;">
-                <span class="ion-eye"></span>
+                <span class="ion-ios-search-strong"></span>
             </div> 
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
@@ -116,8 +116,8 @@
 
         <!-- Add Treatment -->
         <div class="crighttab greentab hide" id="addtreatmenttab" >
-            <div class="ctabbtn" ng-click="pulltab('addtreatmenttab')" style="top:180px;">
-                <span class="ion-eye"></span>
+            <div class="ctabbtn" ng-click="pulltab('addtreatmenttab')" style="top:225px;">
+                <span class="ion-clipboard"></span>
             </div> 
             <div class="sidetabcontent">
                 <ion-scroll direction="y" class="theroot"> 
@@ -125,6 +125,25 @@
                     <div class="clr"></div><div class="clr"></div>
                     <div class="sldebxcontent" ng-show="1">
                         <div ng-include src="'views/app/consultation-note-treatment-add-video.html'" ></div>                
+                    </div>
+
+                    
+                </ion-scroll>
+            </div>
+            <div class="clr"></div>
+        </div>
+
+        <!-- past note (obs/diag/treatment)-->
+        <div class="crighttab greentab" id="pastnote" >
+            <div class="ctabbtn" ng-click="pulltab('pastnote')" style="top:270px;">
+                <span class="ion-edit"></span>
+            </div> 
+            <div class="sidetabcontent">
+                <ion-scroll direction="y" class="theroot"> 
+                   
+                    <div class="clr"></div><div class="clr"></div>
+                    <div class="sldebxcontent" ng-show="1">
+                        <div ng-include src="'views/app/past-note-details-video.html'" ></div>
                     </div>
 
                     

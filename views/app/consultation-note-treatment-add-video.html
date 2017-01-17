@@ -76,7 +76,7 @@
                                     </div>
                                 </div>
                                 <div ng-if="field.field == 'Conducted By'">                        
-                                    <div class="inv" >
+                                    <div class="hide inv" >
                                         <div class="item item-divider mt15" > {{field.field}}</div>
                                         <label class="item item-input">
                                             <input type="text" placeholder="{{field.field}}" id="{{field.name}}"  name="{{field.name}}" maxlength="{{field.max_length!=0? field.max_length:''}}" />
@@ -105,7 +105,7 @@
                                         <input type="text" required placeholder="" id="{{field.name}}"  name="{{field.name}}" maxlength="{{field.max_length!=0? field.max_length:''}}" />
                                     </label>
                                 </div>
-                                <div class="proc" ng-if="field.name == 'performed-at'">
+                                <div class="hide proc" ng-if="field.name == 'performed-at'">
                                     <div class="item item-divider mt15" > {{field.field}}</div>
                                     <label class="item item-input">
                                         <input type="text" required placeholder="" id="{{field.name}}"  name="{{field.name}}" maxlength="{{field.max_length!=0? field.max_length:''}}" />
@@ -250,10 +250,10 @@
                                     </label>
                                 </div>
                                 <div  class="" ng-if="field.field == 'Reminder time before'">
-                                    <div class="item item-divider mt15"> Reminder </div>
-                                    <label class="item item-input">
-                                        <input type="number" ng-model="formText" id="{{field.name}}"  name="{{field.name}}" minlength="1" />
-                                    </label>
+                                    <!-- <div class="item item-divider mt15"> Reminder </div> -->
+                                    <!-- <label class="item item-input"> -->
+                                        <input type="hidden" ng-model="formText" id="{{field.name}}"  name="{{field.name}}" minlength="1" value = 0 />
+                                    <!-- </label> -->
                                 </div>
 
                                 <div ng-if="field.field != 'Frequency' && field.name != 'no-of-days' && field.field != 'No of Times' && field.field != 'Reminder time before'">
@@ -336,13 +336,13 @@
                                 </div>
                                 <div ng-if="category == 5">
                                     <div ng-if="field.field == 'Conducted On'">
-                                        <div class="" id="invconon">
+                                        <div class="hide" id="invconon">
                                             <div class="item item-divider mt15">{{field.field}}</div>
                                             <label class="item item-input">   <input type="date" ng-model="curTime" placeholder="{{field.field}}" value="{{curTime|dateFormat1}}"  name="{{field.name}}" /></label>                            
                                         </div>
                                     </div>
                                     <div ng-if="field.field == 'To be conducted before'">
-                                        <div class="hide" id="invconbef">
+                                        <div class="" id="invconbef">
                                             <div class="item item-divider mt15">{{field.field}}</div>
                                             <label class="item item-input">  <input type="date" ng-model="curTime" placeholder="{{field.field}}" id="{{field.name}}" value="{{curTime|dateFormat1}}"  name="{{field.name}}" /></label>                            
                                         </div>
@@ -675,16 +675,16 @@
                                         <div class="item item-divider mt15">{{field.field}} * </div>
                                         <label class="item item-input">
                                             <select class="cselect" ng-init="selData = (field.field_values).split(',')" name="{{field.name}}"  ng-model="formSelect">
-                                                <option value="" ng-selected="1"> Select {{field.field}}</option>
-                                                <option ng-repeat="sel in selData" value="{{sel}}"> {{sel}} </option>
+                                                <!-- <option value="" ng-selected="1"> Select {{field.field}}</option> -->
+                                                <option ng-repeat="sel in selData" value="{{sel}}"  ng-selected="($index == 0)?1:0"> {{sel}} </option>
                                             </select>
                                         </label>
                                     </div>
                                     <div ng-if="field.field == 'Reminder Frequency'">
-                                        <label class="item item-input">
+                                        <label class=" hide item item-input">
                                             <select class="cselect" ng-init="selData = (field.field_values).split(',')" name="{{field.name}}"  ng-model="formSelect">
-                                                <option value="" ng-selected="1"> Select {{field.field}}</option>
-                                                <option ng-repeat="sel in selData" value="{{sel}}"> {{sel}} </option>
+                                                <!-- <option value="" ng-selected="1"> Select {{field.field}}</option> -->
+                                                <option ng-repeat="sel in selData" value="{{sel}}" ng-selected="($index == 0)?1:0"> {{sel}} </option>
                                             </select>
                                         </label>
                                     </div>
@@ -746,16 +746,16 @@
                                     </div>
                                 </div>
                                 <div ng-if="category == 4" >
-                                    <ion-toggle ng-model="proStatus" ng-checked="1" ng-click="check(proStatus)" ng-change="check(proStatus)" toggle-class="toggle-positive"> Conducted </ion-toggle>
-                                    <input type="hidden" value="Conducted" id="proconduct" name="{{field.name}}" />
+                                    <ion-toggle ng-model="proStatus" ng-checked="0" ng-click="check(proStatus)" ng-change="check(proStatus)" toggle-class="toggle-positive"> Conducted </ion-toggle>
+                                    <input type="hidden" value="To be Conducted" id="proconduct" name="{{field.name}}" />
                                 </div>
                                 <div ng-if="category == 3" >
-                                    <ion-toggle ng-model="mediStatus" ng-checked="0"  ng-click="check(mediStatus)" ng-change="check(mediStatus)" toggle-class="toggle-positive"> Active </ion-toggle>
+                                    <!-- <ion-toggle ng-model="mediStatus" ng-checked="1"  ng-click="check(mediStatus)" ng-change="check(mediStatus)" toggle-class="toggle-positive"> Active </ion-toggle> -->
                                     <input type="hidden" value="Active" id="mediStatus" name="{{field.name}}" />
                                 </div>
                                 <div ng-if="category == 5" >
-                                    <ion-toggle ng-model="invStatus" ng-checked="1" ng-click="check(invStatus)" ng-change="check(invStatus)" toggle-class="toggle-positive"> Conducted </ion-toggle>
-                                    <input type="hidden" value="Conducted" id="invconduct" name="{{field.name}}" />
+                                    <ion-toggle ng-model="invStatus" ng-checked="0" ng-click="check(invStatus)" ng-change="check(invStatus)" toggle-class="toggle-positive"> Conducted </ion-toggle>
+                                    <input type="hidden" value="To be conducted" id="invconduct" name="{{field.name}}" />
                                 </div>
                                 <ion-list ng-if="category == 6">
                                     <div ng-if="field.field == 'Type'">
@@ -837,5 +837,5 @@
     <button type="submit"  ng-click="submit()" class="button button-positive w100p brdradious0" ng-disabled="addRecordForm.$invalid"> 
         <strong>Submit </strong>
     </button>
-    <button ng-click="toggleHiddenTab('addtreatmenttab')" class="button button-add button-block">Cancel</button>
+    <button ng-click="cancelTreatmentAddPage()" class="button button-add button-block">Cancel</button>
 </div>

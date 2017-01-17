@@ -6,11 +6,24 @@
     <my-tabs class="themetabs">
         <my-tab title="Created by you ({{totalCreateByYou}})"> <!-- ng-click="subpage('createdbyu')" --> 
             <div ng-controller="expandAccordianRecordsCtrl">
+                <div class ="sldebxcontent hide ConsultationNotesView">
+                    <button ng-click="closeRecView()" class="button button-add icon ion-backspace"> Close</button>
+                    <div class="list cdetail-list">
+                        <div class="chatlist achat" ng-repeat="card in cardsConsultations">
+                            <a class="item item-icon-right" ng-click="openNotesDetails(card.id)">           
+                                <span class="title">{{card.date| dateFormat3}}</span>                        
+                                <span class="chat-time">View</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <div class="sldebxcontent hide RecordsView">
                     <button ng-click="closeRecView()" class="button button-add icon ion-backspace"> Close</button>
                     <button ng-click="shareTreatment()" class="button button-share icon ion-android-share-alt">Share</button>
                     <!-- <button ng-click="addNew('{{catid}}')" class="button button-add icon ion-plus"> Add</button> -->
-                
+                    <div class="tabcontainer" >
+                        <p ng-if="cardsViewRecords.records.length == 0">No record(s) found.</p>
+                    </div> 
                     <div class="row" ng-repeat="card in cardsViewRecords.records">
                         <div class = "col greenbox card">
                             <!--task -->

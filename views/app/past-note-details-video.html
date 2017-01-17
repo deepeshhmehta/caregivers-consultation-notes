@@ -1,0 +1,37 @@
+<div class="mtabcon" ng-controller="PastConsultationsNotesDetailsCtrl">
+    <div class="list catlist">
+        <div class="maintab" style="margin:0;">
+            <div>
+                <div class="row tabnav" >
+                    <div class="col" ng-repeat="option in options"><a  ng-class="(tabnav['{{option.name|tolowercase}}'] == 1)? 'active options {{option.name|tolowercase}}':'options {{option.name|tolowercase}}'" ng-click="tabClicked('{{option.name|tolowercase}}','{{option.url}}')">{{option.name|capitalize}}</a></div>   
+                </div>            
+            </div>        
+        </div>
+        <div class="clr"></div><div class="clr"></div>
+        <div class="sldebxcontent" ng-show="tabnav['observations']" ng-controller='PastConsultationsNotesObservationViewVideoCtrl'>
+            <div ng-include src="'views/app/past-note-observation-view.html'" ></div>                        
+        </div>
+        <div class="sldebxcontent" ng-show="tabnav['diagnosis']" ng-controller='PastConsultationsNotesDiagnosisViewVideoCtrl'>
+            <div ng-include src="'views/app/past-note-diagnosis-view.html'" ></div>                        
+        </div>
+
+        <div class="sldebxcontent" ng-show="tabnav['treatment']" ng-controller='PastConsultationsNotesTreatmentViewVideoCtrl'>            <div ng-include src="'views/app/past-note-treatment-view-video.html'" ></div>                        
+        </div>
+        
+        <!-- <div ng-repeat="option in options">                
+            <a class="item item-icon-right accordian greyblock" ng-click="goUrl('{{option.url}}','{{option.category}}','{{option.name}}')" ng-if="(option.children.length==0)">
+                <span class="ctitle">{{option.name|capitalize}}</span>  
+            </a>
+
+            <a class="item item-icon-right accordian greyblock" ng-if="(option.children.length!=0)">
+                <span class="ctitle">{{option.name|capitalize}}</span>	
+            </a>
+            
+            <div class="panel hide" ng-if="check(option.children)">
+                <div ng-repeat="child in option.children" >
+                    <a class ="item" ng-click="goUrl('{{child.url}}','{{child.category}}','{{child.name}}')">{{child.name|capitalize}}</a>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>

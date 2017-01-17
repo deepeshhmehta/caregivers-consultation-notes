@@ -17,21 +17,5 @@
 
         <div class="sldebxcontent" ng-show="tabnav['treatment']" ng-controller='ConsultationsNotesTreatmentViewVideoCtrl'>            <div ng-include src="'views/app/consultation-note-treatment-view-video.html'" ></div>                        
         </div>
-        
-        <!-- <div ng-repeat="option in options">                
-            <a class="item item-icon-right accordian greyblock" ng-click="goUrl('{{option.url}}','{{option.category}}','{{option.name}}')" ng-if="(option.children.length==0)">
-                <span class="ctitle">{{option.name|capitalize}}</span>  
-            </a>
-
-            <a class="item item-icon-right accordian greyblock" ng-if="(option.children.length!=0)">
-                <span class="ctitle">{{option.name|capitalize}}</span>	
-            </a>
-            
-            <div class="panel hide" ng-if="check(option.children)">
-                <div ng-repeat="child in option.children" >
-                    <a class ="item" ng-click="goUrl('{{child.url}}','{{child.category}}','{{child.name}}')">{{child.name|capitalize}}</a>
-                </div>
-            </div>
-        </div> -->
     </div>
 </div>

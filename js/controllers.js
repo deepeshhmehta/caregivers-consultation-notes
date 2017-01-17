@@ -381,6 +381,7 @@ angular.module('your_app_name.controllers', [])
             $scope.coverage = 'Family Floater';
             $scope.probstatus = 'Current';
             $scope.taskstatus = 'Onetime';
+            $scope.invStatus ="To Be Conducted";
             $scope.assignfor = 'Self';
             $scope.conId = [];
             $scope.conIds = [];
@@ -603,9 +604,9 @@ angular.module('your_app_name.controllers', [])
                 options.mimeType = "image/jpeg";
                 options.chunkedMode = true;
                 var params = {};
-//                params.value1 = "someparams";
-//                params.value2 = "otherparams";
-//                options.params = params;
+               // params.value1 = "someparams";
+               // params.value2 = "otherparams";
+               // options.params = params;
                 var uploadSuccess = function (response) {
                     alert('Success  ====== ');
                     console.log("Code = " + r.responseCode);
@@ -685,6 +686,7 @@ angular.module('your_app_name.controllers', [])
                     }
                 }
             };
+            $scope.check($scope.invStatus);
             $scope.rcheck = function (val) {
                 console.log(val);
                 if ($scope.categoryId == 2) {
@@ -751,10 +753,10 @@ angular.module('your_app_name.controllers', [])
                     for (var i = 0; i < element.files.length; i++) {
                         var reader = new FileReader();
                         reader.onload = function (e) {
-//                            $("<img />", {
-//                                "src": e.target.result,
-//                                "class": "thumb-image"
-//                            }).appendTo(image_holder);
+                           // $("<img />", {
+                           //     "src": e.target.result,
+                           //     "class": "thumb-image"
+                           // }).appendTo(image_holder);
                             $('<span class="upattach"><i class="ion-paperclip"></i></span>').appendTo(image_holder);
                         }
                         image_holder.show();
@@ -855,8 +857,19 @@ angular.module('your_app_name.controllers', [])
             $scope.meals = [{time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}, {time: '', details: ''}];
             $scope.mealDetails = [];
             $scope.dayMeal = [];
+            $scope.prescribe = window.localStorage.getItem('fname');
+            $scope.assignfor = 'Patient';
             
             $scope.loadrecordData = function(catid){
+                $scope.record = [];
+                $scope.record['noteid'] = $scope.noteid;
+                $scope.fields = [];
+                $scope.problems = [];
+                $scope.doctrs = [];
+                $scope.category = $scope.categoryId;
+                $scope.conditions = [];
+                $scope.langtext = [];
+                $scope.language = [];
                 $scope.categoryId = catid;
                 $http({
                     method: 'GET',
@@ -866,8 +879,6 @@ angular.module('your_app_name.controllers', [])
                     console.log(response.data);
                     $scope.record = response.data.record;
                     $scope.record['noteid'] = $scope.noteid;
-                    console.log('hello');
-                    console.log($scope.record);
                     $scope.fields = response.data.fields;
                     $scope.problems = response.data.problems;
                     $scope.doctrs = response.data.doctrs;
@@ -890,11 +901,25 @@ angular.module('your_app_name.controllers', [])
                             }
                         });
                     }
-                    
+                    $scope.check(true);
                     $ionicLoading.hide();
                 }, function errorCallback(response) {
                     console.log(response);
                 });
+            }
+
+            $scope.cancelTreatmentAddPage = function(){
+                $scope.nadd = 'null';
+                $scope.record = [];
+                $scope.record['noteid'] = $scope.noteid;
+                $scope.fields = [];
+                $scope.problems = [];
+                $scope.doctrs = [];
+                $scope.category = $scope.categoryId;
+                $scope.conditions = [];
+                $scope.langtext = [];
+                $scope.language = [];
+                $scope.toggleHiddenTab('addtreatmenttab');
             }
 
             $scope.loadrecordData($scope.categoryId);
@@ -952,7 +977,7 @@ angular.module('your_app_name.controllers', [])
                                     console.log(response);
                                     if (response.data == 'Success') {
                                         alert("Records shared successfully!");
-                                        $scope.toggleHiddenTab('addtreatmenttab');
+                                        
                                         //$state.go('app.records-view', {'id': $scope.categoryId, 'patientId': $scope.patientId, 'shared': 0}, {}, {reload: true});
                                     }
                                 }, function errorCallback(e) {
@@ -961,12 +986,13 @@ angular.module('your_app_name.controllers', [])
                             } else {
 
                                 alert("Record added successfully!");
-                                $scope.toggleHiddenTab('addtreatmenttab');
+                                
                             }
+                        $scope.cancelTreatmentAddPage();
                         } else if (response.err != '') {
                             alert('Please fill mandatory fields');
                         }
-                        $scope.toggleHiddenTab('addtreatmenttab');
+                        
                     });
                 }
 
@@ -1119,11 +1145,13 @@ angular.module('your_app_name.controllers', [])
                         jQuery('#proconduct').val('Conducted On');
                         jQuery('#proconon').removeClass('hide');
                         jQuery('.proc').removeClass('hide');
+                        jQuery('.inv').removeClass('hide');
                         jQuery('#proconbef').addClass('hide');
                     } else {
                         jQuery('#proconduct').val('To be conducted');
                         jQuery('#proconon').addClass('hide');
                         jQuery('.proc').addClass('hide');
+                        jQuery('.inv').addClass('hide');
                         jQuery('#proconbef').removeClass('hide');
                     }
                 }
@@ -1141,6 +1169,7 @@ angular.module('your_app_name.controllers', [])
                     }
                 }
             };
+
             $scope.rcheck = function (val) {
                 console.log(val);
                 if ($scope.categoryId == 2) {
@@ -4766,6 +4795,194 @@ angular.module('your_app_name.controllers', [])
             }            
         })
 
+        .controller('PastConsultationsNotesDetailsCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
+            $scope.pastNoteid = get('pastNoteId');
+            $scope.data = {};
+            $scope.tabnav = {};
+            $scope.obsId = [];
+            $scope.obsIds = [];
+            $scope.diagIds  = [];
+            $scope.catIds = [];
+            $scope.sharecheckboxes = {};
+            $scope.tabnav['observations'] = 1;
+            console.log($scope.pastNoteid);
+            $scope.userid = window.localStorage.getItem('id');
+            $scope.options = {};
+            $scope.i = 1;
+            $scope.$watch('obsId', function() {
+                console.log('obsIdChanged');
+                console.log($scope.obsId);
+                }, true);
+            $scope.selectObservationCheckbox = function ($event) {
+                console.log($event);
+            }
+
+            $scope.tabClicked= function(val,url){
+                
+                angular.forEach($scope.tabnav, function(value, key){
+                    $scope.tabnav[key] = 0;
+                });
+                $scope.tabnav[val] = 1;
+                console.log($scope.tabnav);
+            }
+
+            $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-note-details',
+                        params: {userid: $scope.userid}
+                    }).then(function successCallback(response) {
+                        $scope.options = response.data;
+                        console.log($scope.options);
+                    });
+
+
+            $scope.goUrl = function(val, catid, catname){
+                console.log(val);
+                store({'noteid': $scope.pastNoteid,'catid' : catid, 'catname' : catname});
+                $state.go(val, {}, {relaod: true});
+            }
+
+            $scope.noteShare = function(){
+                if(confirm('Are you sure you want to share the entire note with the patient?')){
+                    console.log('share Entire Note button clicked');
+                    
+                    $scope.data['noteid'] = $scope.pastNoteid;
+                    $scope.data['rowids'] = [];
+                    $scope.data['rowids'].push($scope.pastNoteid);
+                    $scope.data['type'] = 1;
+                    console.log(JSON.stringify($scope.data));
+
+                    $http({
+                        method: 'POST',
+                        url: domain + 'doctors/share-consultation-note-details',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                    },function errorCallback(response){
+                        alert('there was an error encountered');
+                        console.log(response.data.message);
+                        console.log(response.data.error);
+                    });
+                }
+
+            }
+
+            $scope.shareObservation = function (obj) {
+                // jQuery('.selectObservations').css('display', 'block');
+                // jQuery('#shareObs').css('display', 'none');
+                // jQuery('#cancelObs').css('display', 'block');
+                if(confirm('Are you sure you want to share all observations with the patient?')){
+                    console.log('sharing following observations with the patient');
+                    angular.forEach(obj, function(value,key){
+                        $scope.obsIds.push(value['id']);
+                    });
+                    $scope.data['noteid'] = $scope.pastNoteid;
+                    $scope.data['rowids'] = $scope.obsIds;
+                    $scope.data['type'] = 2;
+                    console.log(JSON.stringify($scope.data));
+
+                    $http({
+                        method: 'POST',
+                        url: domain + 'doctors/share-consultation-note-details',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                    },function errorCallback(response){
+                        alert('there was an error encountered');
+                        console.log(response.data.message);
+                        console.log(response.data.error);
+                    });
+
+                }
+            };
+
+            $scope.shareDiagnosis = function(obj){
+                if(confirm('Are you sure you want to share all diagnosis with the patient?')){
+                    console.log('sharing following diagnosis with the patient');
+                    angular.forEach(obj, function(value,key){
+                        $scope.diagIds.push(value['id']);
+                    });
+                    $scope.data['noteid'] = $scope.pastNoteid;
+                    $scope.data['rowids'] = $scope.diagIds;
+                    $scope.data['type'] = 3;
+                    console.log(JSON.stringify($scope.data));
+
+                    $http({
+                        method: 'POST',
+                        url: domain + 'doctors/share-consultation-note-details',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                    },function errorCallback(response){
+                        alert('there was an error encountered');
+                        console.log(response.data.message);
+                        console.log(response.data.error);
+                    });
+
+                }
+            };
+
+            $scope.cancelObservation = function(){
+                jQuery('.selectObservations').css('display', 'none');
+                jQuery('#shareObs').css('display', 'block');
+                jQuery('#cancelObs').css('display', 'none');
+                $scope.obsIds = [];
+            }
+
+            $scope.shareTreatment = function(obj){
+                if(confirm('Are you sure you want to share all treatments with the patient?')){
+                    console.log('sharing following treatments with the patient');
+                    angular.forEach(obj, function(value,key){
+                        if(value['count'] > 0){
+                            $scope.catIds.push(value['category']);
+                        }
+                    });
+                    $scope.data['noteid'] = $scope.pastNoteid;
+                    $scope.data['categories'] = $scope.catIds;
+                    $scope.data['type'] = 4;
+                    console.log(JSON.stringify($scope.data));
+
+                    $http({
+                        method: 'POST',
+                        url: domain + 'doctors/share-consultation-note-details',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                    },function errorCallback(response){
+                        alert('there was an error encountered');
+                        console.log(response.data.message);
+                        console.log(response.data.error);
+                    });
+
+                }
+            }
+
+            
+
+            $scope.getObsIds = function (id) {
+                console.log(id);
+                if ($scope.obsId[id]) {
+                    $scope.obsIds.push(id);
+                } else {
+                    var index = $scope.obsIds.indexOf(id);
+                    console.log('index @ remove: ', index);
+                    $scope.obsIds.splice(index, 1);
+                }
+                console.log('observations');
+                console.log($scope.obsIds);
+
+            };
+
+            $scope.check = function(val){
+                if (val.length == 0){
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }            
+        })
+
         .controller('ConsultationsMedicationCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
             $scope.noteid = get('noteid');
             console.log('noteid: ' + $scope.noteid);
@@ -5246,6 +5463,7 @@ angular.module('your_app_name.controllers', [])
             $scope.doRefreshObservations();            
         })
 
+
         .controller('ConsultationsNotesObservationViewVideoCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
             $scope.data = {};
 
@@ -5294,6 +5512,51 @@ angular.module('your_app_name.controllers', [])
                 $scope.doRefreshObservations();
             },2000);
         })
+
+
+        .controller('PastConsultationsNotesObservationViewVideoCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
+            $scope.data = {};
+
+            $scope.doRefreshObservationsPast = function(){
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-observations',
+                        params: {note_id: $scope.pastNoteid}
+                    }).then(function successCallback(response) {
+                        $scope.cardsObservationsPast = {};
+                        $scope.cardsObservationsPast = response.data.existing_observations;
+
+                        console.log($scope.cardsObservationsPast);
+                        console.log(response.data.message);
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+
+            $scope.addObservation = function(){
+                jQuery('.observationAdd').show('slow');
+            }
+            $ionicModal.fromTemplateUrl('create-Observation', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+            $scope.saveObservation = function(){
+                console.log(JSON.stringify($scope.data));
+                $scope.modal.hide();
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-notes-add-observations',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                        jQuery('.observationAdd').hide('slow');
+                        $scope.data['observation'] = "";
+                        $scope.doRefreshObservations();
+                        $scope.toggleHiddenTab('obsdiagtab');
+                    });
+            }
+        })
+
 
         .controller('ConsultationsNotesObservationsCtrl', function ($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
             $scope.noteid = get('noteid');
@@ -14115,14 +14378,21 @@ angular.module('your_app_name.controllers', [])
         })
         .controller('expandAccordianRecordsCtrl',function($ionicLoading, $scope, $rootScope, $http, $compile, $ionicModal, $timeout, $stateParams, $cordovaCamera, $ionicHistory, $ionicPopup, $state, $window, $filter, $ionicScrollDelegate){
             $scope.shared = 0;
+            $scope.cardsConsultations ={};
             $scope.expandAccordian = function(url,catid,createOrShare){
-                $scope.catid = catid;
-                 $scope.doRefresha(catid,createOrShare);
-                // console.log('dorefresh complete');
-                jQuery('.RecordsView').show('slow');
+                if(url != 'app.consultationnotes'){
+                    $scope.catid = catid;
+                    $scope.loadRecords(catid,createOrShare);
+                    jQuery('.RecordsView').show('slow');
+                    // console.log('dorefresh complete');
+                }else{
+                    $scope.loadConsultationNotes();
+                    jQuery('.ConsultationNotesView').show('slow');
+                }
+                
                 jQuery('.allRecords').hide('slow');
             }
-            $scope.doRefresha = function (catid,share) {
+            $scope.loadRecords = function (catid,share) {
                 $http({
                     method: 'GET',
                     url: domain + 'doctors/get-records-details-within-video',
@@ -14173,9 +14443,24 @@ angular.module('your_app_name.controllers', [])
                     
                 });
             }
+
+            $scope.loadConsultationNotes = function(){
+                //http call...
+                //http response.data = $scope.cardsConsultations;
+                $http({
+                    method: 'GET',
+                    url: domain + 'doctors/get-consultation-notes-within-video',
+                    params: {appointment_id: $stateParams.id, doctorid: get('id')}
+                }).then(function successCallback(response) {
+                    $scope.cardsConsultations = response.data.existing_notes;
+                    console.log($scope.cardsConsultations);                    
+                });
+            }
+
             $scope.closeRecView = function(){
                 console.log('closerec called');
                 jQuery('.RecordsView').hide('slow');
+                jQuery('.ConsultationNotesView').hide('slow');
                 jQuery('.allRecords').show('slow');
             }
         })
@@ -15606,6 +15891,7 @@ angular.module('your_app_name.controllers', [])
             sidetab('#addfamilytab');
             sidetab('#obsdiagtab');
             sidetab('#addtreatmenttab');
+            sidetab('#pastnote');
 
             $scope.toggleHiddenTab = function(tabid){
                 if (jQuery('#' + tabid).hasClass('active')) { 
