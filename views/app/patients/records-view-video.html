@@ -10,7 +10,7 @@
                     <button ng-click="closeRecView()" class="button button-add icon ion-backspace"> Close</button>
                     <div class="list cdetail-list">
                         <div class="chatlist achat" ng-repeat="card in cardsConsultations">
-                            <a class="item item-icon-right" ng-click="openNotesDetails(card.id)">           
+                            <a class="item item-icon-right" ng-click="openPastNotesDetails(card.id)">           
                                 <span class="title">{{card.date| dateFormat3}}</span>                        
                                 <span class="chat-time">View</span>
                             </a>

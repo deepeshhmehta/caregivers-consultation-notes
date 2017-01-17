@@ -4585,7 +4585,7 @@ angular.module('your_app_name.controllers', [])
             $scope.openNotesDetails = function(val){
                 console.log('goto details page for note id: ' +val);
                 store({'noteId': val});
-                $state.go('app.consultation-note-details',{relaod: true});
+                $state.go('app.consultation-note-details',{appId:'0'},{relaod: true});
             }
 
             $scope.addNote = function(){
@@ -5204,6 +5204,81 @@ angular.module('your_app_name.controllers', [])
             $scope.doRefresh();
         })
 
+        .controller('PastConsultationsProcedureCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading) {
+            $scope.pastNoteId = get('pastNoteid');
+            console.log('noteid: ' + $scope.pastNoteId);
+            $scope.data =  {};
+            $scope.data['noteid'] =  $scope.pastNoteId;
+            var date = new Date();
+            
+            $scope.doRefreshTreatmentsPast = function(){
+                $scope.pastNoteId = get('pastNoteId');
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-procedures',
+                        params: {note_id: $scope.pastNoteId}
+                    }).then(function successCallback(response) {
+                        $scope.cards = {};
+                        $scope.cards = response.data;
+                        console.log($scope.cards);
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+
+            $rootScope.$on("LoadPastTreatments", function(){
+               $scope.doRefreshTreatmentsPast();
+            });
+            
+            $scope.setToggle = function(val){
+                $scope.data['status-1'] = val?'Conducted':'To be Conducted';
+            }
+
+            $scope.setDate = function(val){
+                $scope.data['conducted-on']="0000-00-00";    
+                $scope.data['to-be-conducted-before']="0000-00-00";
+                if(date < val){
+                    console.log('future');
+                    $scope.data['to-be-conducted-before']=val;
+                }
+                else{
+                    console.log('past');
+                    $scope.data['conducted-on']=val;  
+                }
+            }
+
+            $scope.swipedAway = function (val){
+                console.log('swiped: ' + val);
+                $scope.doRefresh();
+            }
+
+            $ionicModal.fromTemplateUrl('create-procedure', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $scope.addProcedure = function(){
+                $scope.modal.show();
+            }
+
+            $scope.saveProcedure = function(){
+                console.log($scope.data);
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-note-add-procedure',
+                        data: $scope.data
+                    }).then(function successCallback(response) {
+                        console.log('response');
+                        console.log(response.data);
+                    }, function errorCallback(response){
+                        console.log('error');
+                        console.log(response.data.message);
+                        alert('some field is missing');
+                    });
+            }
+            $scope.doRefresh();
+        })
+
         .controller('ConsultationsNotesTreatmentViewCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
             console.log('treatmentview');
 
@@ -5417,13 +5492,67 @@ angular.module('your_app_name.controllers', [])
                 $scope.doRefreshDiagnosis();
             },2000);
         })  
+        .controller('PastConsultationsNotesDiagnosisViewVideoCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
+            
+            $scope.data = {};
+
+            $scope.addDiagnosis = function(){
+                jQuery('.diagnosisAdd').show('slow');                
+            }
+
+            $ionicModal.fromTemplateUrl('create-diagnosis', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $scope.doRefreshDiagnosisPast = function(){
+                $scope.pastNoteid = get('pastNoteId');
+                $http({
+                        method: 'GET',
+                        url: domain + 'doctors/consultation-notes-diagnosis',
+                        params: {note_id: $scope.pastNoteid}
+                    }).then(function successCallback(response) {
+                        $scope.cardsDiagnosis = {};
+                        $scope.cardsDiagnosis = response.data.existing_diagnosis;
+
+                        console.log($scope.cardsDiagnosis);
+                        console.log(response.data.message);
+                    });
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+
+            $rootScope.$on("LoadPastDiagnosis", function(){
+               $scope.doRefreshDiagnosisPast();
+            });
+
+            $scope.saveDiagnosis = function(){
+                console.log(JSON.stringify($scope.data));
+                $scope.modal.hide();
+                $http({
+                        method: 'POST',
+                        url: domain + 'doctors/consultation-notes-add-diagnosis',
+                        data: JSON.stringify($scope.data)
+                    }).then(function successCallback(response) {
+                        jQuery('.diagnosisAdd').hide('slow');
+                        $scope.data['diagnosis'] = "";
+                        alert(response.data.message);
+                        $scope.doRefreshDiagnosisPast();
+                        $scope.toggleHiddenTab('obsdiagtab');
+                    });
+            }
+            $scope.cancelAction = function(){
+                jQuery('.diagnosisAdd').hide('slow');
+                $scope.data['diagnosis'] = "";
+            }
+        })
 
         .controller('ConsultationsNotesObservationViewCtrl',function($scope, $http, $stateParams, $rootScope, $state, $compile, $ionicModal, $ionicHistory, $timeout, $filter, $ionicLoading){
            
             $scope.noteid = get('noteId');
             $scope.data = {};
             $scope.data['noteid'] = $scope.noteid;
-            $scope.doRefresh = function(){
+            $scope.doRefreshObservations = function(){
                 $http({
                         method: 'GET',
                         url: domain + 'doctors/consultation-notes-observations',
@@ -5518,6 +5647,7 @@ angular.module('your_app_name.controllers', [])
             $scope.data = {};
 
             $scope.doRefreshObservationsPast = function(){
+                $scope.pastNoteid = get('pastNoteId');
                 $http({
                         method: 'GET',
                         url: domain + 'doctors/consultation-notes-observations',
@@ -5531,6 +5661,10 @@ angular.module('your_app_name.controllers', [])
                     });
                 $scope.$broadcast('scroll.refreshComplete');
             }
+
+            $rootScope.$on("LoadPastObservations", function(){
+               $scope.doRefreshObservationsPast();
+            });
 
             $scope.addObservation = function(){
                 jQuery('.observationAdd').show('slow');
@@ -14444,6 +14578,19 @@ angular.module('your_app_name.controllers', [])
                 });
             }
 
+            $scope.openPastNotesDetails = function(pastNoteId){
+                store({'pastNoteId':  pastNoteId});
+                $scope.pastNoteid = pastNoteId;
+                $scope.toggleHiddenTab('pastnote');
+                $rootScope.$emit("LoadPastObservations", {});
+                $rootScope.$emit("LoadPastDiagnosis", {});
+                $rootScope.$emit("LoadPastTreatments", {});
+                // $scope.doRefreshObservationsPast();
+                // $scope.doRefreshDiagnosisPast();
+                // $scope.doRefreshTreatmentsPast();
+
+
+            }
             $scope.loadConsultationNotes = function(){
                 //http call...
                 //http response.data = $scope.cardsConsultations;
