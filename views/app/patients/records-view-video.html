@@ -7,7 +7,8 @@
         <my-tab title="Created by you ({{totalCreateByYou}})"> <!-- ng-click="subpage('createdbyu')" --> 
             <div ng-controller="expandAccordianRecordsCtrl">
                 <div class ="sldebxcontent hide ConsultationNotesView">
-                    <button ng-click="closeRecView()" class="button button-add icon ion-backspace"> Close</button>
+                    <button ng-click="closeRecView()" class="button button-delete icon ion-backspace"></button>
+
                     <div class="list cdetail-list">
                         <div class="chatlist achat" ng-repeat="card in cardsConsultations">
                             <a class="item item-icon-right" ng-click="openPastNotesDetails(card.id)">           
@@ -18,8 +19,8 @@
                     </div>
                 </div>
                 <div class="sldebxcontent hide RecordsView">
-                    <button ng-click="closeRecView()" class="button button-add icon ion-backspace"> Close</button>
-                    <button ng-click="shareTreatment()" class="button button-share icon ion-android-share-alt">Share</button>
+                    <button ng-click="closeRecView()" class="button button-delete icon ion-backspace"></button>
+                    <button ng-click="shareTreatment()" class="button btn-share"><i class="icon ion-android-share-alt"/></button>
                     <!-- <button ng-click="addNew('{{catid}}')" class="button button-add icon ion-plus"> Add</button> -->
                     <div class="tabcontainer" >
                         <p ng-if="cardsViewRecords.records.length == 0">No record(s) found.</p>
@@ -165,7 +166,14 @@
 
         <my-tab title="Shared with you ({{totalSharedWithYou}})"> <!-- ng-click="subpage('createdbyu')" --> 
             <div ng-controller="expandAccordianRecordsCtrl">
-                <div class="row" ng-repeat="card in cardsViewRecords.records">
+                <div class="sldebxcontent hide RecordsView">
+                    <button ng-click="closeRecView()" class="button button-delete icon ion-backspace"></button>
+                    <button ng-click="shareTreatment()" class="button btn-share"><i class="icon ion-android-share-alt"/></button>
+                    <!-- <button ng-click="addNew('{{catid}}')" class="button button-add icon ion-plus"> Add</button> -->
+                    <div class="tabcontainer" >
+                        <p ng-if="cardsViewRecords.records.length == 0">No record(s) found.</p>
+                    </div> 
+                    <div class="row " ng-repeat="card in cardsViewRecords.records">
                         <div class = "col greenbox card">
                             <!--task -->
                             <td-card  id="td-card" on-transition-out="swipedAway(card.id)" ng-if="catid == 30">
@@ -268,10 +276,8 @@
                             </td-card> 
                         </div>
                     </div>
+                </div>
                 <!--  ng-click="subpage('createdbyu')"  -->
-                <div class="tabcontainer" >
-                    <p ng-if="records.length == 0">No record(s) found.</p>
-                </div> 
 
                 <div ng-repeat="cat in allCatsSharedWithYou" ng-if="$index % 3 == 0" class="row allRecords" width="99%">
                     <div class="col greenbox card">
