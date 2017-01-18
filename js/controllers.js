@@ -5428,10 +5428,10 @@ angular.module('your_app_name.controllers', [])
                         url: domain + 'doctors/consultation-notes-diagnosis',
                         params: {note_id: $scope.noteid}
                     }).then(function successCallback(response) {
-                        $scope.cards = {};
-                        $scope.cards = response.data.existing_diagnosis;
+                        $scope.cardsDiagnosis = {};
+                        $scope.cardsDiagnosis = response.data.existing_diagnosis;
 
-                        console.log($scope.cards);
+                        console.log($scope.cardsDiagnosis);
                         console.log(response.data.message);
                     });
                 $scope.$broadcast('scroll.refreshComplete');
